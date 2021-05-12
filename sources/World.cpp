@@ -316,6 +316,7 @@ void World::draw(const Camera& camera, const std::vector<const Light*>& lights, 
 
 void World::draw_water(const Camera& camera, const std::vector<const Light*>& lights) const
 {
+	glDisable(GL_CULL_FACE);
 	Shader::water.bind();
 	Texture::water_dudv.bind(2);
 	Texture::water_normals.bind(3);
@@ -341,4 +342,5 @@ void World::draw_water(const Camera& camera, const std::vector<const Light*>& li
 	Texture::unbind();
 	Texture::unbind();
 	Shader::unbind();
+	glEnable(GL_CULL_FACE);
 }

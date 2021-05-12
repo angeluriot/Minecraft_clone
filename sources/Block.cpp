@@ -2,7 +2,7 @@
 #include "Chunk.h"
 #include "World.h"
 
-Block Block::air	= Block(Block::Type::Air, glm::ivec3(), NULL);
+Block Block::air = Block(Block::Type::Air, glm::ivec3(), NULL);
 
 // Crée un bloc
 

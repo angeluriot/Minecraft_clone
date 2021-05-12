@@ -155,7 +155,7 @@ void Game::draw()
 
 	// Fait le rendu du final
 
-	VertexBuffer game(Shader::screen, glm::scale(glm::mat4(1.f), glm::vec3(2.f, 2.f, 2.f)) * glm::rotate(glm::mat4(1.f), pi, glm::vec3(0.1f, 0.f, 0.f)) * Mesh::square);
+	VertexBuffer game(Shader::screen, Mesh::screen, DataType::Positions | DataType::TexCoords);
 
 	Shader::screen.bind();
 	FrameBuffer::game.get_texture().bind(0);

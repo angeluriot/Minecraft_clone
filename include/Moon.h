@@ -8,6 +8,10 @@
 
 class Moon : public Luminary
 {
+private:
+
+	bool	inverted; // Sprite dans le sens inverse
+
 public:
 
 	void	init() override;

@@ -3,9 +3,9 @@
 #include "Mesh.h"
 #include "Shader.h"
 
-const glm::mat4	Luminary::scale_matrix = glm::scale(glm::mat4(1.f), glm::vec3(size, size, size));
-const glm::mat4	Luminary::translation_matrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, distance));
-const glm::mat4	Luminary::rotation_matrix = glm::rotate(glm::mat4(1.f), angle, glm::vec3(0.f, 1.f, 0.f));
+const glm::mat4	Luminary::scale_matrix			= glm::scale(glm::mat4(1.f), glm::vec3(size, size, size));
+const glm::mat4	Luminary::translation_matrix	= glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -distance));
+const glm::mat4	Luminary::rotation_matrix		= glm::rotate(glm::mat4(1.f), angle, glm::vec3(0.f, 1.f, 0.f));
 
 // Crée un astre
 

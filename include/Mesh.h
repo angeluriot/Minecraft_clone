@@ -25,6 +25,7 @@ public:
 	static const Mesh	null;			// Vide
 	static const Mesh	sphere_64;		// Sphère avec 64 latitudes et 64 longitudes
 	static const Mesh	square;			// Carré
+	static const Mesh	screen;			// Ecran
 
 						Mesh();
 						Mesh(const Mesh& other);
@@ -51,6 +52,7 @@ public:
 	static Mesh			Cylinder(uint16_t nb_lattitudes);
 	static Mesh			Sphere(uint16_t nb_latitudes, uint16_t nb_longitudes);
 	static Mesh			Square();
+	static Mesh			Screen();
 
 	friend				Block;
 	friend				Skin;

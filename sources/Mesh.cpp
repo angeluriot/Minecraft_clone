@@ -7,6 +7,7 @@ const Mesh	Mesh::cylinder_64	= Mesh::Cylinder(64);
 const Mesh	Mesh::null			= Mesh();
 const Mesh	Mesh::sphere_64		= Mesh::Sphere(64, 64);
 const Mesh	Mesh::square		= Mesh::Square();
+const Mesh	Mesh::screen		= Mesh::Screen();
 
 // Crée un maillage
 
@@ -534,12 +535,51 @@ Mesh Mesh::Square()
 
 	mesh.positions =
 	{
-		-0.5f, -0.5f,  0.f,
 		 0.5f,  0.5f,  0.f,
-		 0.5f, -0.5f,  0.f,
-		-0.5f, -0.5f,  0.f,
 		-0.5f,  0.5f,  0.f,
-		 0.5f,  0.5f,  0.f
+		-0.5f, -0.5f,  0.f,
+		 0.5f, -0.5f,  0.f,
+		 0.5f,  0.5f,  0.f,
+		-0.5f, -0.5f,  0.f
+	};
+
+	mesh.normals =
+	{
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f
+	};
+
+	mesh.texcoords =
+	{
+		1.f, 0.f,
+		0.f, 0.f,
+		0.f, 1.f,
+		1.f, 1.f,
+		1.f, 0.f,
+		0.f, 1.f
+	};
+
+	return mesh;
+}
+
+// Crée un écran
+
+Mesh Mesh::Screen()
+{
+	Mesh mesh;
+
+	mesh.positions =
+	{
+		 1.f,  1.f,  0.f,
+		-1.f,  1.f,  0.f,
+		-1.f, -1.f,  0.f,
+		 1.f, -1.f,  0.f,
+		 1.f,  1.f,  0.f,
+		-1.f, -1.f,  0.f
 	};
 
 	mesh.normals =
@@ -554,12 +594,12 @@ Mesh Mesh::Square()
 
 	mesh.texcoords =
 	{
-		0.f, 1.f,
-		1.f, 0.f,
 		1.f, 1.f,
 		0.f, 1.f,
 		0.f, 0.f,
-		1.f, 0.f
+		1.f, 0.f,
+		1.f, 1.f,
+		0.f, 0.f
 	};
 
 	return mesh;
