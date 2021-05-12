@@ -200,7 +200,6 @@ void Shader::unbind()
 	glUseProgram(0);
 }
 
-
 // Ouvre les shaders utilisés dans le programme
 
 void Shader::init()
