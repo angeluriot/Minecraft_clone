@@ -1,17 +1,17 @@
 #version 130
 precision mediump float;
 
+varying vec3 v_normal;
+varying vec3 v_position;
+varying vec2 v_texcoord;
+varying vec4 v_diffuse_color;
+
 uniform vec3 u_camera;
 uniform vec4 u_ambient_color;
 uniform vec4 u_specular_color;
 uniform float u_shininess;
 uniform vec3 u_light_direction;
 uniform sampler2D u_texture;
-
-varying vec3 v_normal;
-varying vec3 v_position;
-varying vec2 v_texcoord;
-varying vec4 v_diffuse_color;
 
 void main()
 {

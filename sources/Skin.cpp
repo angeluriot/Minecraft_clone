@@ -24,7 +24,7 @@ Skin::Part::Part(const Part& other)
 Skin::Part::Part(Mesh mesh, const glm::vec2& texture_pos, const glm::vec3& size, const std::vector<Part*>& children)
 {
 	mesh.texcoords = init_texcoords(texture_pos / texture_size, size / texture_size);
-	object.send_data(Shader::mob, mesh);
+	object.send_data(Shader::entity, mesh);
 	propagated_matrix = glm::mat4(1.f);
 	local_matrix = glm::mat4(1.f);
 	this->children = children;
@@ -361,7 +361,7 @@ void Skin::update_walk()
 
 void Skin::draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane) const
 {
-	Shader::mob.bind();
+	Shader::entity.bind();
 	Texture::player.bind(0);
 
 	body.draw(camera, lights, clipping_plane);

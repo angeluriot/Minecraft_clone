@@ -1,7 +1,7 @@
 #include "Shader.h"
 
 Shader Shader::block;
-Shader Shader::mob;
+Shader Shader::entity;
 Shader Shader::sky;
 Shader Shader::luminary;
 Shader Shader::water;
@@ -205,7 +205,7 @@ void Shader::unbind()
 void Shader::init()
 {
 	Shader::block.load("Shaders/block.vert", "Shaders/block.frag");
-	Shader::mob.load("Shaders/mob.vert", "Shaders/mob.frag");
+	Shader::entity.load("Shaders/entity.vert", "Shaders/entity.frag");
 	Shader::sky.load("Shaders/sky.vert", "Shaders/sky.frag");
 	Shader::luminary.load("Shaders/luminary.vert", "Shaders/luminary.frag");
 	Shader::water.load("Shaders/water.vert", "Shaders/water.frag");

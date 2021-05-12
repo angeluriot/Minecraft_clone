@@ -59,7 +59,7 @@ private:
 public:
 
 	static Shader			block;		// Shader des blocs
-	static Shader			mob;		// Shader des mobs
+	static Shader			entity;		// Shader des mobs
 	static Shader			sky;		// Shader du ciel
 	static Shader			luminary;	// Shader des astres
 	static Shader			water;		// Shader de l'eau

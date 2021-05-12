@@ -5,17 +5,17 @@ attribute vec3 a_position;
 attribute vec3 a_normal;
 attribute vec2 a_texcoord;
 
+varying vec3 v_normal;
+varying vec3 v_position;
+varying vec2 v_texcoord;
+varying vec4 v_diffuse_color;
+
 uniform mat4 u_model;
 uniform mat3 u_inverted_model;
 uniform mat4 u_mvp;
 uniform vec4 u_diffuse_color;
 uniform vec3 u_light_direction;
 uniform vec4 u_clipping_plane;
-
-varying vec3 v_normal;
-varying vec3 v_position;
-varying vec2 v_texcoord;
-varying vec4 v_diffuse_color;
 
 void main()
 {
