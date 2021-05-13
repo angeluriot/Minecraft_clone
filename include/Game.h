@@ -35,6 +35,7 @@ public:
 	static Camera					fixed_cam;		// Caméra fixée par le joueur
 	static bool						fix_cam;		// La caméra est fixée
 	static bool						stop_moving;	// Arrête de bouger la caméra
+	static bool						debug;			// Affiche les élements de debug
 	static float					time;			// Temps écoulé
 
 	static void						init();

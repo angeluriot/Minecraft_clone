@@ -53,6 +53,7 @@ public:
 	void					send_meshes();
 	void					draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane = Plane(0.f, 1.f, 0.f, 10000)) const;
 	void					draw_water(const Camera& camera, const std::vector<const Light*>& lights) const;
+	void					draw_debug(const Camera& camera) const;
 };
 
 #endif

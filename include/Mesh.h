@@ -21,6 +21,7 @@ public:
 	static const Mesh	circle_64;		// Cercle avec 64 côtés
 	static const Mesh	cone_64;		// Cône avec 64 latitudes
 	static const Mesh	cube;			// Cube
+	static const Mesh	empty_cube;		// Cube avec juste les arrêtes
 	static const Mesh	cylinder_64;	// Cylinde avec 64 latitudes
 	static const Mesh	null;			// Vide
 	static const Mesh	sphere_64;		// Sphère avec 64 latitudes et 64 longitudes
@@ -49,6 +50,7 @@ public:
 	static Mesh			Circle(uint16_t nb_edges);
 	static Mesh			Cone(uint16_t nb_lattitudes);
 	static Mesh			Cube();
+	static Mesh			EmptyCube();
 	static Mesh			Cylinder(uint16_t nb_lattitudes);
 	static Mesh			Sphere(uint16_t nb_latitudes, uint16_t nb_longitudes);
 	static Mesh			Square();

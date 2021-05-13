@@ -4,11 +4,12 @@ World					Game::world;
 Sun						Game::sun;
 Moon					Game::moon;
 Sky						Game::sky;
-std::stack<glm::mat4>	Game::matrices = {};
+std::stack<glm::mat4>	Game::matrices		= {};
 Player					Game::player;
 Camera					Game::fixed_cam;
-bool					Game::fix_cam = false;
-bool					Game::stop_moving = false;
+bool					Game::fix_cam		= false;
+bool					Game::stop_moving	= false;
+bool					Game::debug			= false;
 float					Game::time = 0.f;
 
 // Initialise le jeu
@@ -37,6 +38,10 @@ void Game::checks_events(const SDL_Event& my_event)
 {
 	if (my_event.type == SDL_KEYUP)
 	{
+		// Active le debug
+		if (my_event.key.keysym.sym == SDLK_p)
+			debug = !debug;
+
 		// Voler
 		if (my_event.key.keysym.sym == SDLK_m)
 			player.fly = !player.fly;
@@ -126,6 +131,9 @@ void Game::draw()
 
 		player.draw(render_camera, { sun.get_light() }, Plane(0.f, -1.f, 0.f, water_level));
 		world.draw(render_camera, { sun.get_light() }, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
+
+		if (debug)
+			world.draw_debug(render_camera);
 	}
 	FrameBuffer::unbind();
 
@@ -142,6 +150,9 @@ void Game::draw()
 		sun.draw(render_camera);
 		moon.draw(render_camera);
 		sky.draw(render_camera);
+
+		if (debug)
+			world.draw_debug(render_camera);
 
 		FrameBuffer::reflection.get_texture().bind(0);
 		FrameBuffer::refraction.get_texture().bind(1);

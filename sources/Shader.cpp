@@ -6,6 +6,7 @@ Shader Shader::sky;
 Shader Shader::luminary;
 Shader Shader::water;
 Shader Shader::screen;
+Shader Shader::debug;
 
 // Je ne sais pas ce n'est pas ma fonction
 
@@ -204,10 +205,11 @@ void Shader::unbind()
 
 void Shader::init()
 {
-	Shader::block.load("Shaders/block.vert", "Shaders/block.frag");
-	Shader::entity.load("Shaders/entity.vert", "Shaders/entity.frag");
-	Shader::sky.load("Shaders/sky.vert", "Shaders/sky.frag");
-	Shader::luminary.load("Shaders/luminary.vert", "Shaders/luminary.frag");
-	Shader::water.load("Shaders/water.vert", "Shaders/water.frag");
-	Shader::screen.load("Shaders/screen.vert", "Shaders/screen.frag");
+	Shader::block.load("shaders/block.vert", "shaders/block.frag");
+	Shader::entity.load("shaders/entity.vert", "shaders/entity.frag");
+	Shader::sky.load("shaders/sky.vert", "shaders/sky.frag");
+	Shader::luminary.load("shaders/luminary.vert", "shaders/luminary.frag");
+	Shader::water.load("shaders/water.vert", "shaders/water.frag");
+	Shader::screen.load("shaders/screen.vert", "shaders/screen.frag");
+	Shader::debug.load("shaders/debug.vert", "shaders/debug.frag");
 }

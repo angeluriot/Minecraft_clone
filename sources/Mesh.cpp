@@ -3,6 +3,7 @@
 const Mesh	Mesh::circle_64		= Mesh::Circle(64);
 const Mesh	Mesh::cone_64		= Mesh::Cone(64);
 const Mesh	Mesh::cube			= Mesh::Cube();
+const Mesh	Mesh::empty_cube	= Mesh::EmptyCube();
 const Mesh	Mesh::cylinder_64	= Mesh::Cylinder(64);
 const Mesh	Mesh::null			= Mesh();
 const Mesh	Mesh::sphere_64		= Mesh::Sphere(64, 64);
@@ -398,6 +399,120 @@ Mesh Mesh::Cube()
 		0.f, 0.f,
 		0.f, 1.f,
 		1.f, 1.f
+	};
+
+	return mesh;
+}
+
+// Crée un cube avec juste les arrêtes
+
+Mesh Mesh::EmptyCube()
+{
+	Mesh mesh;
+
+	mesh.positions =
+	{
+		//Back
+		 0.5f, -0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+
+		//Front
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+
+		//Top
+		-0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f, -0.5f,
+
+		 //Bottom
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f, -0.5f
+	};
+
+	mesh.normals =
+	{
+		//Back
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+
+		//Front
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+
+		//Top
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+
+		//Bottom
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f
+	};
+
+	mesh.texcoords =
+	{
+		//Back
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+
+		//Front
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+
+		//Top
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+
+		//Bottom
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f,
+		0.f, 0.f
 	};
 
 	return mesh;

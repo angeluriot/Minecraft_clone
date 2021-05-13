@@ -240,11 +240,15 @@ void World::init(const glm::vec3& player_pos)
 {
 	srand(seed);
 
-	glm::mat4 scale = glm::scale(glm::mat4(1.f), glm::vec3(Chunk::size, Chunk::size, Chunk::size));
-	glm::mat4 rotation = glm::rotate(glm::mat4(1.f), pi / 2.f, glm::vec3(1.f, 0.f, 0.f));
-	glm::mat4 shift = glm::translate(glm::mat4(1.f), glm::vec3(Chunk::size / 2.f - 0.5f, water_level, Chunk::size / 2.f - 0.5f));
+	glm::mat4 water_scale = glm::scale(glm::mat4(1.f), glm::vec3(Chunk::size, Chunk::size, Chunk::size));
+	glm::mat4 water_rotation = glm::rotate(glm::mat4(1.f), pi / 2.f, glm::vec3(1.f, 0.f, 0.f));
+	glm::mat4 water_shift = glm::translate(glm::mat4(1.f), glm::vec3(Chunk::size / 2.f - 0.5f, water_level, Chunk::size / 2.f - 0.5f));
 
-	Chunk::water.send_data(Shader::water, (shift * rotation * scale) * Mesh::square);
+	glm::mat4 limits_scale = glm::scale(glm::mat4(1.f), glm::vec3(Chunk::size, 10000.f, Chunk::size));
+	glm::mat4 limits_shift = glm::translate(glm::mat4(1.f), glm::vec3(Chunk::size / 2.f - 0.5f, 0.f, Chunk::size / 2.f - 0.5f));
+
+	Chunk::water.send_data(Shader::water, (water_shift * water_rotation * water_scale) * Mesh::square);
+	Chunk::limits.send_data(Shader::debug, (limits_shift * limits_scale) * Mesh::empty_cube, DataType::Positions);
 
 	add_chunk(block_to_chunk(player_pos));
 }
@@ -341,6 +345,27 @@ void World::draw_water(const Camera& camera, const std::vector<const Light*>& li
 	VertexBuffer::unbind();
 	Texture::unbind();
 	Texture::unbind();
+	Shader::unbind();
+	glEnable(GL_CULL_FACE);
+}
+
+// Affiche les élements de debug
+
+void World::draw_debug(const Camera& camera) const
+{
+	glDisable(GL_CULL_FACE);
+	Shader::debug.bind();
+	Chunk::limits.bind();
+
+	for (auto chunk : chunks)
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(chunk->position));
+		Chunk::limits.send_uniform("u_mvp", camera.get_matrix() * model);
+
+		Chunk::limits.draw(DrawType::Lines);
+	}
+
+	VertexBuffer::unbind();
 	Shader::unbind();
 	glEnable(GL_CULL_FACE);
 }

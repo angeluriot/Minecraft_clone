@@ -64,12 +64,13 @@ public:
 	static Shader			luminary;	// Shader des astres
 	static Shader			water;		// Shader de l'eau
 	static Shader			screen;		// Shader du post-processing
+	static Shader			debug;		// Shader de debug
 
 							Shader();
 							Shader(const Shader& other);
 							Shader(const std::string& vert_path, const std::string& frag_path);
 							~Shader();
-
+	
 	Shader&					operator=(const Shader& other);
 
 	bool					load(const std::string& vert_path, const std::string& frag_path);

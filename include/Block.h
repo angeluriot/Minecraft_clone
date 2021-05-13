@@ -57,6 +57,8 @@ public:
 	const Chunk&			get_chunk() const;
 	Type					get_type() const;
 	glm::ivec3				get_position() const;
+
+	friend					Chunk;
 };
 
 #endif

@@ -5,7 +5,42 @@
 #include "Material.h"
 #include "Game.h"
 
-VertexBuffer Chunk::water;
+VertexBuffer					Chunk::water;
+VertexBuffer					Chunk::limits;
+std::vector<Chunk::LeavesToAdd>	Chunk::leaves_to_add = {};
+
+// Crée une liste de feuilles à ajouter
+
+Chunk::LeavesToAdd::LeavesToAdd()
+{
+	chunk = glm::ivec3();
+	leaves.clear();
+}
+
+// Crée une liste de feuilles à ajouter à partir de la position du chunk
+
+Chunk::LeavesToAdd::LeavesToAdd(const glm::ivec3& chunk_position)
+{
+	chunk = chunk_position;
+	leaves.clear();
+}
+
+// Crée une liste de feuilles à ajouter à partir d'une autre
+
+Chunk::LeavesToAdd::LeavesToAdd(const LeavesToAdd& other)
+{
+	*this = other;
+}
+
+// Opérateur égal
+
+Chunk::LeavesToAdd& Chunk::LeavesToAdd::operator=(const LeavesToAdd& other)
+{
+	chunk = other.chunk;
+	leaves = other.leaves;
+
+	return *this;
+}
 
 // Crée un chunk
 
@@ -140,6 +175,10 @@ void Chunk::generate_blocks()
 
 			float details_noise = (0.5f + details_strength + mountains_details_strength * 5.f) * (big_details + medium_details + small_details);
 
+			// Forêts
+
+			float forest_noise = (noise(x, z, 500.f, 1.f, 2000.f) + noise(x, z, 150.f, 1.f, 2000.f)) / 40.f;
+
 			// Limite sable - terre
 
 			float big_sand_limit_noise = noise(x, z, 50.f, 1.f, 400.f);
@@ -191,9 +230,8 @@ void Chunk::generate_blocks()
 			
 			// Ajout des arbres
 
-			if (blocks[x][stone_height][z].get_type() == Block::Type::Dirt && rand_probability(0.02f) &&
-				add_tree(x, stone_height + above_stone_height, z))
-			{
+			if (blocks[x][stone_height][z].get_type() == Block::Type::Dirt && rand_probability(forest_noise) && add_tree(x, stone_height + above_stone_height, z))
+			{			
 				if (stone_height + above_stone_height + tree_height > local_layer_max)
 					local_layer_max = stone_height + above_stone_height + tree_height;
 			}
@@ -202,6 +240,22 @@ void Chunk::generate_blocks()
 
 			else if (blocks[x][stone_height][z].get_type() == Block::Type::Dirt && rand_probability(0.3f))
 				add_plant(x, stone_height + above_stone_height, z);
+
+			// Tentative de faire fonctionner les arbres en bordure de chunk :(
+
+			/*
+			// Ajout des feuilles des arbres des autres chunks
+			
+			auto leave_array = std::find_if(leaves_to_add.begin(), leaves_to_add.end(), [&](LeavesToAdd& i) -> bool { return i.chunk == position; });
+
+			if (leave_array != leaves_to_add.end())
+			{
+				for (auto& leave : leave_array->leaves)
+					add_leave(leave.x - position.x, leave.y - position.y, leave.z - position.z);
+
+				leaves_to_add.erase(leave_array);
+			}
+			*/
 		}
 
 	local_layer_min = std::max(uint8_t(local_layer_min - 1), uint8_t(0));
@@ -216,8 +270,15 @@ void Chunk::generate_blocks()
 
 bool Chunk::add_tree(int8_t x, uint8_t y, int8_t z)
 {
-	if (y >= height - tree_height - 1 || x <= 3 || x >= size - 4 || z <= 3 || z >= size - 4)
+	// Empêche qu'il soit en bord de chunk ou à côté d'un autre
+
+	if (x <= 2 || x >= size - 3 || z <= 2 || z >= size - 3 || y >= height - tree_height - 1)
 		return false;
+
+	for (int8_t i = -1; i <= 1; i++)
+		for (int8_t j = -1; j <= 1; j++)
+			if ((*world)[position + glm::ivec3(x, y + 2, z)].get_type() == Block::Type::Wood)
+				return false;
 
 	// Feuilles
 
@@ -249,10 +310,36 @@ bool Chunk::add_tree(int8_t x, uint8_t y, int8_t z)
 
 // Ajoute un bloc de feuilles d'arbre à un endroit donné
 
-void Chunk::add_leave(int8_t x, uint8_t y, int8_t z)
+void Chunk::add_leave(int8_t x, uint8_t y, int8_t z, bool update_block)
 {
 	if (blocks[x][y][z].get_type() == Block::Type::Air)
-		blocks[x][y][z].set_type(Block::Type::Leaves, false);
+		blocks[x][y][z].set_type(Block::Type::Leaves, update_block);
+
+	// Tentative de faire fonctionner les arbres en bordure de chunk :(
+
+	/*
+	else if (world->find_chunk(world->block_to_chunk(position + glm::ivec3(x, y, z))) != NULL)
+	{
+		glm::ivec3 chunk_pos = world->find_chunk(world->block_to_chunk(position + glm::ivec3(x, y, z)))->position;
+
+		glm::ivec3 test = glm::ivec3(position.x + x - chunk_pos.x, position.y + y - chunk_pos.y, position.z + z - chunk_pos.z);
+
+		(*world)[position + glm::ivec3(x, y, z)].chunk->add_leave(test.x, test.y, test.z, true);
+	}
+
+	else
+	{
+		glm::ivec3 chunk_pos = world->block_to_chunk(position + glm::ivec3(x, y, z));
+		auto leave_array = std::find_if(leaves_to_add.begin(), leaves_to_add.end(), [&](LeavesToAdd& i) -> bool { return i.chunk == position; });
+
+		if (leave_array == leaves_to_add.end())
+		{
+			leaves_to_add.push_back(LeavesToAdd(chunk_pos));
+			leave_array = --leaves_to_add.end();
+		}
+
+		leave_array->leaves.push_back(glm::ivec3(position.x + x, position.y + y, position.z + z));
+	}*/
 }
 
 // Ajoute une plente à un endroit donné
