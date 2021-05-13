@@ -32,7 +32,7 @@ void Game::init()
 	sky.init();
 }
 
-// Prend en compte les évenements
+// Prend en compte les ï¿½venements
 
 void Game::checks_events(const SDL_Event& my_event)
 {
@@ -50,7 +50,7 @@ void Game::checks_events(const SDL_Event& my_event)
 		if (my_event.key.keysym.sym == SDLK_F5)
 			player.first_person = !player.first_person;
 
-		// Fixer la caméra
+		// Fixer la camï¿½ra
 		if (my_event.key.keysym.sym == SDLK_o)
 		{
 			fix_cam = !fix_cam;
@@ -58,47 +58,47 @@ void Game::checks_events(const SDL_Event& my_event)
 		}
 	}
 
-	// Quitter la fenêtre
+	// Quitter la fenï¿½tre
 	if ((my_event.type == SDL_KEYUP && my_event.key.keysym.sym == SDLK_ESCAPE) || (stop_moving && my_event.type == SDL_MOUSEBUTTONUP))
 	{
 		stop_moving = !stop_moving;
 		SDL_ShowCursor(stop_moving);
-		SDL_WarpMouseInWindow(Window::window, Window::center.x, Window::center.y);
-		glm::ivec2 mouse_pos = Window::center;
+		SDL_WarpMouseInWindow(GameWindow::window, GameWindow::center.x, GameWindow::center.y);
+		glm::ivec2 mouse_pos = GameWindow::center;
 		SDL_Delay(100);
 	}
 }
 
-// Met à jour le jeu
+// Met ï¿½ jour le jeu
 
 void Game::update(glm::ivec2& mouse_pos)
 {
 	time += frame_duration;
 
-	// Déplacement
+	// Dï¿½placement
 	player.move(SDL_GetKeyboardState(NULL), world);
 
-	// Caméra
+	// Camï¿½ra
 
 	if (!stop_moving)
 	{
 		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 		player.look(mouse_pos);
-		SDL_WarpMouseInWindow(Window::window, Window::center.x, Window::center.y);
+		SDL_WarpMouseInWindow(GameWindow::window, GameWindow::center.x, GameWindow::center.y);
 	}
 
 	player.update_head();
 
-	// Génération
+	// Gï¿½nï¿½ration
 	world.send_meshes();
 
-	// Météo
+	// Mï¿½tï¿½o
 	sun.update(player.get_position());
 	moon.update(player.get_position());
 	sky.update(player.get_position(), sun.get_position().y - player.get_position().y);
 }
 
-// Affiche les éléments du jeu
+// Affiche les ï¿½lï¿½ments du jeu
 
 void Game::draw()
 {
@@ -112,7 +112,7 @@ void Game::draw()
 
 	Camera render_camera = fix_cam ? fixed_cam : player.camera;
 	render_camera.invert(water_level);
-	render_camera.change_resolution(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
+	render_camera.change_resolution(GameWindow::size.x * reflection_quality, GameWindow::size.y * reflection_quality);
 
 	FrameBuffer::reflection.bind();
 	{
@@ -129,7 +129,7 @@ void Game::draw()
 	// Fait le rendu de la refraction
 
 	render_camera = fix_cam ? fixed_cam : player.camera;
-	render_camera.change_resolution(Window::size.x * refraction_quality, Window::size.y * refraction_quality);
+	render_camera.change_resolution(GameWindow::size.x * refraction_quality, GameWindow::size.y * refraction_quality);
 
 	FrameBuffer::refraction.bind();
 	{
@@ -145,7 +145,7 @@ void Game::draw()
 
 	// Fait le rendu du jeu
 
-	render_camera.change_resolution(Window::size.x, Window::size.y);
+	render_camera.change_resolution(GameWindow::size.x, GameWindow::size.y);
 
 	FrameBuffer::game.bind();
 	{

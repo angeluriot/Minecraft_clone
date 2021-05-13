@@ -5,24 +5,24 @@ FrameBuffer FrameBuffer::game;
 FrameBuffer FrameBuffer::reflection;
 FrameBuffer FrameBuffer::refraction;
 
-// Crée un frame buffer
+// Crï¿½e un frame buffer
 
 FrameBuffer::FrameBuffer()
 {
 	fbo = std::make_shared<GLuint>(0);
 	rbo = std::make_shared<GLuint>(0);
-	width = Window::size.x;
-	height = Window::size.y;
+	width = GameWindow::size.x;
+	height = GameWindow::size.y;
 }
 
-// Crée un frame buffer à partir d'un autre
+// Crï¿½e un frame buffer ï¿½ partir d'un autre
 
 FrameBuffer::FrameBuffer(const FrameBuffer& other)
 {
 	*this = other;
 }
 
-// Crée un frame buffer à partir de sa résolution
+// Crï¿½e un frame buffer ï¿½ partir de sa rï¿½solution
 
 FrameBuffer::FrameBuffer(uint16_t width, uint16_t height)
 {
@@ -32,7 +32,7 @@ FrameBuffer::FrameBuffer(uint16_t width, uint16_t height)
 	create(this->width, this->height);
 }
 
-// Opérateur égal (attention ce n'est pas une vraie copie, à utiliser pour déplacer un frame buffer mais pas pour en créer un nouveau)
+// Opï¿½rateur ï¿½gal (attention ce n'est pas une vraie copie, ï¿½ utiliser pour dï¿½placer un frame buffer mais pas pour en crï¿½er un nouveau)
 
 FrameBuffer& FrameBuffer::operator=(const FrameBuffer& other)
 {
@@ -51,7 +51,7 @@ FrameBuffer& FrameBuffer::operator=(const FrameBuffer& other)
 	return *this;
 }
 
-// Détruit le frame buffer
+// Dï¿½truit le frame buffer
 
 FrameBuffer::~FrameBuffer()
 {
@@ -62,7 +62,7 @@ FrameBuffer::~FrameBuffer()
 	}
 }
 
-// Initialise le frame buffer à partir de sa taille
+// Initialise le frame buffer ï¿½ partir de sa taille
 
 void FrameBuffer::create(uint16_t width, uint16_t height)
 {
@@ -129,7 +129,7 @@ void FrameBuffer::bind() const
 void FrameBuffer::unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, Window::size.x, Window::size.y);
+	glViewport(0, 0, GameWindow::size.x, GameWindow::size.y);
 }
 
 // Vide le frame buffer
@@ -139,11 +139,11 @@ void FrameBuffer::clear()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-// Crée les frame buffers utilisés dans le programme
+// Crï¿½e les frame buffers utilisï¿½s dans le programme
 
 void FrameBuffer::init()
 {
-	game.create(Window::size.x, Window::size.y);
-	reflection.create(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
-	refraction.create(Window::size.x * refraction_quality, Window::size.y * refraction_quality);
+	game.create(GameWindow::size.x, GameWindow::size.y);
+	reflection.create(GameWindow::size.x * reflection_quality, GameWindow::size.y * reflection_quality);
+	refraction.create(GameWindow::size.x * refraction_quality, GameWindow::size.y * refraction_quality);
 }
