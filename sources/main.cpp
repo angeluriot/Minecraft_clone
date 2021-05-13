@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
 	bool running = true;
 
 	// Initiation des librairies
-	if (!Window::init())
+	if (!GameWindow::init())
 		return EXIT_FAILURE;
 
 	// Le jeu
@@ -13,8 +13,8 @@ int main(int argc, char* argv[])
 	std::thread generation_thread([&running]() { while (running) Game::world.generate(Game::player.get_position()); });
 	
 	// La souris
-	glm::ivec2 mouse_pos = Window::center;
-	SDL_WarpMouseInWindow(Window::window, Window::center.x, Window::center.y);
+	glm::ivec2 mouse_pos = GameWindow::center;
+	SDL_WarpMouseInWindow(GameWindow::window, GameWindow::center.x, GameWindow::center.y);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_Delay(100);
 	
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		// Mises à jour
+		// Mises ï¿½ jour
 		lock.lock();
 		Game::update(mouse_pos);
 		lock.unlock();
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 		Game::draw();
 		lock.unlock();
 
-		SDL_GL_SwapWindow(Window::window);
+		SDL_GL_SwapWindow(GameWindow::window);
 
 		// Images par seconde
 
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	}
 
 	generation_thread.join();
-	Window::clear();
+	GameWindow::clear();
 
 	return 0;
 }

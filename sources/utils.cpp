@@ -3,14 +3,14 @@
 
 std::mutex		lock;
 
-SDL_Window*		Window::window = NULL;
-SDL_GLContext	Window::context = NULL;
-glm::ivec2		Window::size = glm::ivec2(10, 10);
-glm::ivec2		Window::center = glm::ivec2(5, 5);
+SDL_Window*		GameWindow::window = NULL;
+SDL_GLContext	GameWindow::context = NULL;
+glm::ivec2		GameWindow::size = glm::ivec2(10, 10);
+glm::ivec2		GameWindow::center = glm::ivec2(5, 5);
 
-// Initialise la fenêtre
+// Initialise la fenï¿½tre
 
-bool Window::init()
+bool GameWindow::init()
 {
 	// Initialize SDL2
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
@@ -27,7 +27,7 @@ bool Window::init()
 	center.x = size.x / 2;
 	center.y = size.y / 2;
 
-	// Create a Window
+	// Create a GameWindow
 	window = SDL_CreateWindow("Minecraft clone",	// Titre
 		SDL_WINDOWPOS_UNDEFINED,					// X Position
 		SDL_WINDOWPOS_UNDEFINED,					// Y Position
@@ -65,25 +65,25 @@ bool Window::init()
 	return true;
 }
 
-// Supprime la fenêtre
+// Supprime la fenï¿½tre
 
-void Window::clear()
+void GameWindow::clear()
 {
 	if (context != NULL)
-		SDL_GL_DeleteContext(Window::context);
+		SDL_GL_DeleteContext(GameWindow::context);
 
 	if (window != NULL)
-		SDL_DestroyWindow(Window::window);
+		SDL_DestroyWindow(GameWindow::window);
 }
 
-// Donne un int aléatoire entre min et max
+// Donne un int alï¿½atoire entre min et max
 
 int32_t random_int(int32_t min, int32_t max)
 {
 	return (rand() % (max - min)) + min;
 }
 
-// Donne vrai avec une probabilité donnée
+// Donne vrai avec une probabilitï¿½ donnï¿½e
 
 bool rand_probability(float probability)
 {
@@ -119,7 +119,7 @@ void set_horizontal_norm(glm::vec3& vector, float value)
 	}
 }
 
-// Opérateur de multiplication
+// Opï¿½rateur de multiplication
 
 glm::vec3 operator*(const glm::mat4& matrix, const glm::vec3& vector)
 {

@@ -1,13 +1,13 @@
 #include "Camera.h"
 
-// Crée une caméra à partir d'une autre
+// Crï¿½e une camï¿½ra ï¿½ partir d'une autre
 
 Camera::Camera(const Camera& other)
 {
 	*this = other;
 }
 
-// Crée une caméra à partir de ces propriétés
+// Crï¿½e une camï¿½ra ï¿½ partir de ces propriï¿½tï¿½s
 
 Camera::Camera(const glm::vec3& position, float sensitivity, float fov)
 {
@@ -17,14 +17,14 @@ Camera::Camera(const glm::vec3& position, float sensitivity, float fov)
 
 	direction = glm::vec3(0.f, 0.f, -1.f);
 
-	projection = glm::perspective(fov, static_cast<float>(Window::size.x) / static_cast<float>(Window::size.y), 0.1f, 100.f);
+	projection = glm::perspective(fov, static_cast<float>(GameWindow::size.x) / static_cast<float>(GameWindow::size.y), 0.1f, 100.f);
 	view = glm::lookAt(this->position, this->position + direction, glm::vec3(0.f, 1.f, 0.f));
 
 	yaw = -90.f;
 	pitch = 0.f;
 }
 
-// Opérateur égal
+// Opï¿½rateur ï¿½gal
 
 Camera& Camera::operator=(const Camera& other)
 {
@@ -40,12 +40,12 @@ Camera& Camera::operator=(const Camera& other)
 	return *this;
 }
 
-// Changement de la direction de la caméra à partir des mouvements de la souris
+// Changement de la direction de la camï¿½ra ï¿½ partir des mouvements de la souris
 
 void Camera::look(const glm::ivec2& mouse_pos)
 {
-	yaw += (mouse_pos.x - Window::center.x) * sensitivity;
-	pitch -= (mouse_pos.y - Window::center.y) * sensitivity;
+	yaw += (mouse_pos.x - GameWindow::center.x) * sensitivity;
+	pitch -= (mouse_pos.y - GameWindow::center.y) * sensitivity;
 
 	if (pitch > 89.f)
 		pitch = 89.f;
@@ -61,15 +61,15 @@ void Camera::look(const glm::ivec2& mouse_pos)
 	view = glm::lookAt(position, position + direction, glm::vec3(0.f, 1.f, 0.f));
 }
 
-// Donne la matrice de la caméra
+// Donne la matrice de la camï¿½ra
 
 glm::mat4 Camera::get_matrix() const
 {
-	// glm::perspective bug et ne prend pas en compte les paramètres "near" et "far" donc je le fais artificiellement ici
+	// glm::perspective bug et ne prend pas en compte les paramï¿½tres "near" et "far" donc je le fais artificiellement ici
 	return glm::scale(glm::mat4(1.f), glm::vec3(1.f, 1.f, 0.1)) * projection * view;
 }
 
-// Change la position de la caméra
+// Change la position de la camï¿½ra
 
 void Camera::set_position(const glm::vec3& position)
 {
@@ -77,35 +77,35 @@ void Camera::set_position(const glm::vec3& position)
 	view = glm::lookAt(this->position, this->position + direction, glm::vec3(0.f, 1.f, 0.f));
 }
 
-// Donne la position de la caméra
+// Donne la position de la camï¿½ra
 
 glm::vec3 Camera::get_position() const
 {
 	return position;
 }
 
-// Donne l'angle horizontal de la caméra
+// Donne l'angle horizontal de la camï¿½ra
 
 float Camera::get_yaw() const
 {
 	return yaw;
 }
 
-// Donne l'angle vertical de la caméra
+// Donne l'angle vertical de la camï¿½ra
 
 float Camera::get_pitch() const
 {
 	return pitch;
 }
 
-// Donne la direction de la caméra
+// Donne la direction de la camï¿½ra
 
 glm::vec3 Camera::get_direction() const
 {
 	return direction;
 }
 
-// Inverse la caméra en fonction de la hauteur d'un miroir hozitontal
+// Inverse la camï¿½ra en fonction de la hauteur d'un miroir hozitontal
 
 void Camera::invert(float mirror_level)
 {
@@ -120,7 +120,7 @@ void Camera::invert(float mirror_level)
 	view = glm::lookAt(position, position + direction, glm::vec3(0.f, 1.f, 0.f));
 }
 
-// Change la résolution de l'image donnée par la caméra
+// Change la rï¿½solution de l'image donnï¿½e par la camï¿½ra
 
 void Camera::change_resolution(float width, float height)
 {

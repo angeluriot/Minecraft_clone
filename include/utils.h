@@ -5,25 +5,25 @@
 
 constexpr float						pi					= 3.14159265359f;			// Pi
 constexpr float						framerate			= 60.f;						// Nombre max d'images par seconde
-constexpr float						frame_duration		= 1.f / framerate;			// Durée min d'une frame
-constexpr float						frame_duration_ms	= 1.f / framerate * 1e3;	// Durée min d'une frame en seconde
+constexpr float						frame_duration		= 1.f / framerate;			// Durï¿½e min d'une frame
+constexpr float						frame_duration_ms	= 1.f / framerate * 1e3;	// Durï¿½e min d'une frame en seconde
 constexpr float						epsilon				= 0.01f;					// Petite valeur
 constexpr float						epsilon_2			= 0.005f;					// Toute petite valeur
 
 constexpr std::array<glm::ivec3, 4>	around_positions	= { glm::ivec3(-1, 0, 0), glm::ivec3(1, 0, 0), glm::ivec3(0, 0, -1), glm::ivec3(0, 0, 1) }; // Positions autour d'une position
 
-typedef glm::vec4 Color;	// Type définissant une couleur
-typedef glm::vec3 ColorRGB;	// Type définissant une couleur sans l'opacité
-typedef glm::vec4 Plane;	// Type définissant un plan
+typedef glm::vec4 Color;	// Type dï¿½finissant une couleur
+typedef glm::vec3 ColorRGB;	// Type dï¿½finissant une couleur sans l'opacitï¿½
+typedef glm::vec4 Plane;	// Type dï¿½finissant un plan
 
 extern std::mutex lock;
 
-struct Window
+struct GameWindow
 {
-	static SDL_Window*		window;		// Fenêtre
+	static SDL_Window*		window;		// Fenï¿½tre
 	static SDL_GLContext	context;	// Contexte
-	static glm::ivec2		size;		// Taille de la fenêtre
-	static glm::ivec2		center;		// Centre de la fenêtre
+	static glm::ivec2		size;		// Taille de la fenï¿½tre
+	static glm::ivec2		center;		// Centre de la fenï¿½tre
 
 	static bool				init();
 	static void				clear();
