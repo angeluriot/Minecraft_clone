@@ -1,2 +1,2 @@
 # Linguist
-libs/* linguist-vendored
+libs/* linguist-vendored=false
