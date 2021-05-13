@@ -15,6 +15,7 @@ constexpr uint8_t	stone_snow_limit		= 80;			// Limite entre la pierre et la neig
 constexpr float		water_level				= 31.2f;		// Hauteur de l'eau
 constexpr uint8_t	tree_height				= 7;			// Hauteur des arbres
 constexpr float		gravity					= 30.f;			// Force de la gravité
+constexpr uint16_t	nb_max_lights			= 10;			// Nombre maximum de lumières
 
 class Player;
 class Block;
@@ -31,7 +32,7 @@ private:
 
 public:
 
-	static const int64_t	seed;				// Seed de la map
+	uint16_t				seed;				// Seed de la map
 
 							World();
 							World(const World& other);
@@ -47,7 +48,7 @@ public:
 	uint8_t					nb_chunks_around(const glm::ivec3& chunk_pos) const;
 	float					get_distance(const glm::vec3& player_pos, const glm::ivec3& chunk_pos) const;
 	Block*					get_selected_block(const Player& player);
-	void					init(const glm::vec3& player_pos);
+	void					init(const int64_t& seed, const glm::vec3& player_pos);
 	void					generate(const glm::vec3& player_pos);
 	void					generate_meshes();
 	void					send_meshes();

@@ -33,6 +33,7 @@ public:
 	void					init();
 	void					update(const glm::vec3& player_pos, float sun_height);
 	void					draw(const Camera& camera) const;
+	const Light*			get_light() const;
 };
 
 #endif

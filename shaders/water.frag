@@ -6,11 +6,16 @@ varying vec4 v_screen_position;
 
 uniform float u_time;
 uniform vec3 u_camera;
-uniform vec3 u_light_direction;
-uniform vec4 u_ambient_color;
-uniform vec4 u_diffuse_color;
-uniform vec4 u_specular_color;
+uniform vec4 u_color;
+uniform float u_ambient;
+uniform float u_diffuse;
+uniform float u_specular;
 uniform float u_shininess;
+uniform int[10] u_light_types;
+uniform vec3[10] u_light_vectors;
+uniform vec3[10] u_light_colors;
+uniform float[10] u_light_intensities;
+uniform int u_nb_lights;
 uniform sampler2D u_reflection;
 uniform sampler2D u_refraction;
 uniform sampler2D u_water_dudv;
@@ -49,8 +54,6 @@ void main()
 	vec3 camera_direction = normalize(u_camera - v_position);
 	float reflection_alpha = pow(dot(camera_direction, vec3(0., 1., 0.)), 0.75);
 
-	vec3 color = mix(texture2D(u_reflection, reflection_texcoord), texture2D(u_refraction, refraction_texcoord), reflection_alpha).rgb;
-
 	// Calcul des normales
 
 	vec2 normal_texcoord = vec2(v_position.x + waves_speed * u_time, v_position.z - waves_speed * u_time) / waves_size + distortion;
@@ -58,16 +61,41 @@ void main()
 	vec3 normal = texture2D(u_water_normals, normal_texcoord).yzx * 2. - 1.;
 	normal = normalize(mix(normal, vec3(0., 1., 0.), 0.5));
 
-	// Couleur diffuse
+	// Gestion de la lumière
 
-	vec4 diffuse_color = u_diffuse_color * max(0., dot(normal, -u_light_direction));
+	vec3 ambient_color = vec3(0., 0., 0.);
+	vec3 diffuse_color = vec3(0., 0., 0.);
+	vec3 specular_color = vec3(0., 0., 0.);
 
-	// Couleur spéculaire
+	for (int i = 0; i < u_nb_lights; i++)
+	{
+		vec3 light_direction = u_light_vectors[i];
+		float intensity = u_light_intensities[i];
 
-	vec3 light_reflection = reflect(u_light_direction, normal);
-	vec4 specular_color = u_specular_color * pow(max(0., dot(light_reflection, camera_direction)), u_shininess);
+		if (u_light_types[i] == 2)
+		{
+			light_direction = normalize(v_position - u_light_vectors[i]);
+			intensity = u_light_intensities[i] / max(pow(distance(v_position, u_light_vectors[i]), 2), 0.01);
+		}
+
+		// Ambient
+		ambient_color += u_ambient * u_light_colors[i] * intensity;
+
+		if (u_light_types[i] != 0)
+		{
+			// Diffuse
+			diffuse_color += u_diffuse * max(0., dot(normal, -light_direction)) * u_light_colors[i] * intensity;
+
+			// Specular
+			vec3 light_reflection = reflect(light_direction, normal);
+			specular_color += u_specular * pow(max(0., dot(light_reflection, camera_direction)), u_shininess) * u_light_colors[i] * intensity;
+		}
+	}
 
 	// Assemblage final
 
-	gl_FragColor = vec4(mix(color, u_ambient_color.rgb, water_alpha) + diffuse_color.rgb + specular_color.rgb, 1.);
+	vec3 texture = mix(texture2D(u_reflection, reflection_texcoord).rgb, texture2D(u_refraction, refraction_texcoord).rgb, reflection_alpha);
+	vec3 color = (ambient_color + diffuse_color) * texture + specular_color;
+
+	gl_FragColor = vec4(color, u_color.a);
 }

@@ -26,22 +26,14 @@ void Moon::update(const glm::vec3& player_pos)
 	glm::mat4 player_matrix = glm::translate(glm::mat4(1.f), player_pos);
 	glm::mat4 time_matrix = glm::rotate(glm::mat4(1.f), Game::time * speed + pi, glm::vec3(1.f, 0.f, 0.f));
 	glm::mat4 inverse_matrix = inverted ? glm::rotate(glm::mat4(1.f), pi, glm::vec3(0.f, 0.f, 1.f)) : glm::mat4(1.f);
-
 	model = player_matrix * rotation_matrix * time_matrix * translation_matrix * scale_matrix * inverse_matrix;
 
-	float red = 1.f;
-	float green = pow(normalize((get_position().y + distance * 0.3f) / (distance * 1.3f)), 0.2f);
-	float blue = pow(normalize((get_position().y + distance * 0.3f) / (distance * 1.3f)), 2.f);
+	light.set_vector(glm::normalize(player_pos - get_position()));
 
-	glm::vec3 color = glm::vec3(red, green, blue);
+	const float height = get_position().y - player_pos.y;
+	const float max_intensity = distance / 3.f;
+	const float min_intensity = -distance / 5.f;
 
-	light.set_vector(glm::normalize(glm::vec3(player_pos.x, 0.f, player_pos.z) - get_position()));
-	glm::vec3 light_color = color;
-	light_color *= pow(normalize((get_position().y + distance * 0.3f) / (distance * 1.3f)), 0.2f);
-
-	light_color.r = std::min(std::max(0.05f, light_color.r), 1.f);
-	light_color.g = std::min(std::max(0.05f, light_color.g), 1.f);
-	light_color.b = std::min(std::max(0.05f, light_color.b), 1.f);
-
-	light.set_color(Color(light_color, 1.f));
+	light.set_color(Color(0.6f, 0.8f, 1.f, 1.f));
+	light.set_intensity(std::clamp(ratio(height, min_intensity, max_intensity), 0.f, 1.f) * 0.15);
 }

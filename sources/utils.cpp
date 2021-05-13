@@ -134,6 +134,13 @@ float normalize(float number)
 	return std::clamp(number, 0.f, 1.f);
 }
 
+// Donne le ratio d'un nombre entre deux bornes
+
+float ratio(float number, float min, float max)
+{
+	return (number - min) / (max - min);
+}
+
 // Restreint un nombre entre deux valeurs
 
 float smooth_clamp(float value, float min, float max, float smoothness)

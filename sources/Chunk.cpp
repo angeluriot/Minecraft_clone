@@ -133,9 +133,7 @@ Block& Chunk::operator[](const glm::ivec3& block_pos)
 
 float Chunk::noise(int8_t x, int8_t z, float size, float height, float shift)
 {
-	static uint16_t generation_seed = rand();
-
-	return glm::simplex(glm::vec2(float(generation_seed + shift + position.x + x) / size, float(generation_seed + shift + position.z + z) / size)) * height;
+	return glm::simplex(glm::vec2(float(world->seed + shift + position.x + x) / size, float(world->seed + shift + position.z + z) / size)) * height;
 }
 
 // Génération du paysage en utilisant le bruit de Perlin
@@ -489,14 +487,32 @@ void Chunk::draw(const Camera& camera, const std::vector<const Light*>& lights, 
 	object.bind();
 
 	object.send_uniform("u_mvp", camera.get_matrix());
-	object.send_uniform("u_ambient_color", Material::block.get_ambient() * lights[0]->get_color());
-	object.send_uniform("u_diffuse_color", Material::block.get_diffuse() * lights[0]->get_color());
-	object.send_uniform("u_light_direction", lights[0]->get_vector());
 	object.send_uniform("u_camera", camera.get_position());
 	object.send_uniform("u_water_level", water_level);
-	object.send_uniform("u_water_color", Material::water.get_color() * Material::water.get_ambient() * lights[0]->get_color());
+	object.send_uniform("u_water_color", Material::water.get_color());
+	object.send_uniform("u_ambient", Material::block.get_ambient());
+	object.send_uniform("u_diffuse", Material::block.get_diffuse());
 	object.send_uniform("u_clipping_plane", clipping_plane);
 	object.send_texture("u_texture", 0);
+
+	std::vector<int> light_types;
+	std::vector<glm::vec3> light_vectors;
+	std::vector<ColorRGB> light_colors;
+	std::vector<float> light_intensities;
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+	{
+		light_types.push_back((int)lights[i]->get_type());
+		light_vectors.push_back(lights[i]->get_vector());
+		light_colors.push_back(ColorRGB(lights[i]->get_color()));
+		light_intensities.push_back(lights[i]->get_intensity());
+	}
+
+	object.send_uniform("u_light_types", light_types);
+	object.send_uniform("u_light_vectors", light_vectors);
+	object.send_uniform("u_light_colors", light_colors);
+	object.send_uniform("u_light_intensities", light_intensities);
+	object.send_uniform("u_nb_lights", std::min((int)lights.size(), (int)nb_max_lights));
 
 	object.draw();
 	

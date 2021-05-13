@@ -12,8 +12,9 @@ constexpr float						epsilon_2			= 0.005f;					// Toute petite valeur
 
 constexpr std::array<glm::ivec3, 4>	around_positions	= { glm::ivec3(-1, 0, 0), glm::ivec3(1, 0, 0), glm::ivec3(0, 0, -1), glm::ivec3(0, 0, 1) }; // Positions autour d'une position
 
-typedef glm::vec4 Color; // Type définissant une couleur
-typedef glm::vec4 Plane; // Type définissant un plan
+typedef glm::vec4 Color;	// Type définissant une couleur
+typedef glm::vec3 ColorRGB;	// Type définissant une couleur sans l'opacité
+typedef glm::vec4 Plane;	// Type définissant un plan
 
 extern std::mutex lock;
 
@@ -34,6 +35,7 @@ float		get_horizontal_norm(const glm::vec3& vector);
 void		set_horizontal_norm(glm::vec3& vector, float value);
 glm::vec3	operator*(const glm::mat4& matrix, const glm::vec3& vector);
 float		normalize(float number);
+float		ratio(float number, float min, float max);
 float		smooth_clamp(float value, float min, float max, float smoothness);
 
 #endif

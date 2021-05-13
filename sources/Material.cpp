@@ -1,8 +1,8 @@
 #include "Material.h"
 
-Material Material::block	= Material(Color(), 0.4f, 0.6f, 0.f, 1.f);
-Material Material::entity	= Material(Color(), 0.4f, 0.6f, 0.4f, 100.f);
-Material Material::water	= Material(Color(0.f, 0.2f, 0.8f, 1.f), 0.4f, 0.3f, 0.4f, 500.f);
+Material Material::block	= Material(Color(), 0.2f, 0.6f, 0.f, 1.f);
+Material Material::entity	= Material(Color(), 0.2f, 0.6f, 0.4f, 100.f);
+Material Material::water	= Material(Color(0.f, 0.2f, 0.8f, 1.f), 0.4f, 0.4f, 0.4f, 500.f);
 
 // Crée un matériaux
 

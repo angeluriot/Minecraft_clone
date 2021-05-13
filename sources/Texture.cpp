@@ -121,5 +121,5 @@ void Texture::init()
 	Texture::sun.load("textures/sun.png");
 	Texture::moon.load("textures/moon.png");
 	Texture::water_dudv.load("textures/water_dudv.png", GL_MIRRORED_REPEAT, GL_LINEAR);
-	Texture::water_normals.load("textures/water_normals.png", GL_MIRRORED_REPEAT, GL_LINEAR);
+	Texture::water_normals.load("textures/water_normals.png", GL_REPEAT, GL_LINEAR);
 }

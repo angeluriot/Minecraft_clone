@@ -4,14 +4,13 @@
 #include "Texture.h"
 #include "Game.h"
 
-const int64_t World::seed = time(NULL);
-
 // Crée le monde
 
 World::World()
 {
 	chunks.clear();
 	future_chunks_pos.clear();
+	seed = 0;
 }
 
 // Crée le monde à partir d'un autre
@@ -35,6 +34,7 @@ World& World::operator=(const World& other)
 {
 	chunks = other.chunks;
 	future_chunks_pos = other.future_chunks_pos;
+	seed = other.seed;
 
 	return *this;
 }
@@ -236,9 +236,10 @@ Block* World::get_selected_block(const Player& player)
 
 // Ajoute un chunk à l'emplacement du joueur
 
-void World::init(const glm::vec3& player_pos)
+void World::init(const int64_t& seed, const glm::vec3& player_pos)
 {
 	srand(seed);
+	this->seed = rand();
 
 	glm::mat4 water_scale = glm::scale(glm::mat4(1.f), glm::vec3(Chunk::size, Chunk::size, Chunk::size));
 	glm::mat4 water_rotation = glm::rotate(glm::mat4(1.f), pi / 2.f, glm::vec3(1.f, 0.f, 0.f));
@@ -328,15 +329,34 @@ void World::draw_water(const Camera& camera, const std::vector<const Light*>& li
 
 	Chunk::water.send_uniform("u_time", Game::time);
 	Chunk::water.send_uniform("u_camera", camera.get_position());
-	Chunk::water.send_uniform("u_light_direction", lights[0]->get_vector());
-	Chunk::water.send_uniform("u_ambient_color", Material::water.get_color() * Material::water.get_ambient() * lights[0]->get_color());
-	Chunk::water.send_uniform("u_diffuse_color", Material::water.get_color() * Material::water.get_diffuse() * lights[0]->get_color());
-	Chunk::water.send_uniform("u_specular_color", Material::water.get_specular() * lights[0]->get_color());
+	Chunk::water.send_uniform("u_color", Material::water.get_color());
+	Chunk::water.send_uniform("u_ambient", Material::water.get_ambient());
+	Chunk::water.send_uniform("u_diffuse", Material::water.get_diffuse());
+	Chunk::water.send_uniform("u_specular", Material::water.get_specular());
 	Chunk::water.send_uniform("u_shininess", Material::water.get_shininess());
 	Chunk::water.send_texture("u_reflection", 0);
 	Chunk::water.send_texture("u_refraction", 1);
 	Chunk::water.send_texture("u_water_dudv", 2);
 	Chunk::water.send_texture("u_water_normals", 3);
+
+	std::vector<int> light_types;
+	std::vector<glm::vec3> light_vectors;
+	std::vector<ColorRGB> light_colors;
+	std::vector<float> light_intensities;
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+	{
+		light_types.push_back((int)lights[i]->get_type());
+		light_vectors.push_back(lights[i]->get_vector());
+		light_colors.push_back(ColorRGB(lights[i]->get_color()));
+		light_intensities.push_back(lights[i]->get_intensity());
+	}
+
+	Chunk::water.send_uniform("u_light_types", light_types);
+	Chunk::water.send_uniform("u_light_vectors", light_vectors);
+	Chunk::water.send_uniform("u_light_colors", light_colors);
+	Chunk::water.send_uniform("u_light_intensities", light_intensities);
+	Chunk::water.send_uniform("u_nb_lights", std::min((int)lights.size(), (int)nb_max_lights));
 
 	for (auto& chunk : chunks)
 		if (chunk->is_visible(camera))

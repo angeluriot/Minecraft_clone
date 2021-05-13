@@ -50,18 +50,24 @@ Sky& Sky::operator=(const Sky& other)
 
 void Sky::update(const glm::vec3& player_pos, float sun_height)
 {
-	high_color.r = 0.f;
-	high_color.g = pow(normalize((sun_height + Luminary::distance * 0.3f) / (Luminary::distance * 1.3f)) * 0.8f, 1.f);
-	high_color.b = std::max(0.01f, pow(normalize((sun_height + Luminary::distance * 0.3f) / (Luminary::distance * 1.3f)), 0.7f));
-
-	low_color.r = normalize(high_color.g / 2.f + 0.05f);
-	low_color.g = normalize(high_color.g * 2.f + 0.1f);
-	low_color.b = normalize(high_color.b * 2.f + 0.2f);
-
-	light.set_color(high_color);
-
 	glm::mat4 translation_matrix = glm::translate(glm::mat4(1.f), player_pos);
 	model = translation_matrix * scale_matrix;
+
+	const float max_intensity = distance / 2.f;
+	const float min_intensity = -distance / 4.f;
+
+	float intensity = std::clamp(ratio(sun_height, min_intensity, max_intensity), 0.1f, 1.f);
+
+	high_color.r = 0.f * intensity;
+	high_color.g = 0.3f * intensity;
+	high_color.b = 1.f * intensity;
+
+	low_color.r = 0.2f * intensity;
+	low_color.g = 0.8f * intensity;
+	low_color.b = 1.f * intensity;
+
+	light.set_color(low_color);
+	light.set_intensity(intensity);
 }
 
 // Affiche le ciel
@@ -81,4 +87,11 @@ void Sky::draw(const Camera& camera) const
 	VertexBuffer::unbind();
 	Shader::unbind();
 	glFrontFace(GL_CCW);
+}
+
+// Donne un pointeur vers la lumière du ciel
+
+const Light* Sky::get_light() const
+{
+	return &light;
 }

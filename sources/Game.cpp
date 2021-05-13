@@ -10,7 +10,7 @@ Camera					Game::fixed_cam;
 bool					Game::fix_cam		= false;
 bool					Game::stop_moving	= false;
 bool					Game::debug			= false;
-float					Game::time = 0.f;
+float					Game::time			= 0.f;
 
 // Initialise le jeu
 
@@ -26,7 +26,7 @@ void Game::init()
 	player = Player(glm::vec3(0.f, Chunk::height + 3.f, 0.f));
 
 	// World
-	world.init(player.get_position());
+	world.init(std::time(NULL), player.get_position());
 	sun.init();
 	moon.init();
 	sky.init();
@@ -95,7 +95,7 @@ void Game::update(glm::ivec2& mouse_pos)
 	// Météo
 	sun.update(player.get_position());
 	moon.update(player.get_position());
-	sky.update(player.get_position(), sun.get_position().y);
+	sky.update(player.get_position(), sun.get_position().y - player.get_position().y);
 }
 
 // Affiche les éléments du jeu
@@ -103,6 +103,12 @@ void Game::update(glm::ivec2& mouse_pos)
 void Game::draw()
 {
 	// Fait le rendu de la reflection
+
+	Light test_1(Light::Type::Point, glm::vec3(0., 40., 0.), Color(1., 1., 1., 1.), 100.f);
+	Light test_2(Light::Type::Point, glm::vec3(0., 40., 100.), Color(1., 1., 1., 1.), 100.f);
+	Light test_3(Light::Type::Point, glm::vec3(100., 40., 0.), Color(1., 1., 1., 1.), 100.f);
+
+	std::vector<const Light*> lights = { sun.get_light(), moon.get_light(), sky.get_light() };
 
 	Camera render_camera = fix_cam ? fixed_cam : player.camera;
 	render_camera.invert(water_level);
@@ -112,8 +118,8 @@ void Game::draw()
 	{
 		FrameBuffer::clear();
 
-		player.draw(render_camera, { sun.get_light() }, Plane(0.f, 1.f, 0.f, -water_level));
-		world.draw(render_camera, { sun.get_light() }, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
+		player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+		world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
 		sun.draw(render_camera);
 		moon.draw(render_camera);
 		sky.draw(render_camera);
@@ -129,8 +135,8 @@ void Game::draw()
 	{
 		FrameBuffer::clear();
 
-		player.draw(render_camera, { sun.get_light() }, Plane(0.f, -1.f, 0.f, water_level));
-		world.draw(render_camera, { sun.get_light() }, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
+		player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+		world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
 
 		if (debug)
 			world.draw_debug(render_camera);
@@ -145,8 +151,8 @@ void Game::draw()
 	{
 		FrameBuffer::clear();
 
-		player.draw(render_camera, { sun.get_light() }, Plane(0.f, 1.f, 0.f, -water_level));
-		world.draw(render_camera, { sun.get_light() }, Plane(0.f, 1.f, 0.f, -water_level));
+		player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+		world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
 		sun.draw(render_camera);
 		moon.draw(render_camera);
 		sky.draw(render_camera);
@@ -157,7 +163,7 @@ void Game::draw()
 		FrameBuffer::reflection.get_texture().bind(0);
 		FrameBuffer::refraction.get_texture().bind(1);
 		{
-			world.draw_water(render_camera, { sun.get_light() });
+			world.draw_water(render_camera, lights);
 		}
 		Texture::unbind();
 		Texture::unbind();

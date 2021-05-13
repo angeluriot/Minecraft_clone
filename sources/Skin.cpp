@@ -51,17 +51,35 @@ void Skin::Part::draw(const Camera& camera, const std::vector<const Light*>& lig
 
 	object.bind();
 
-	object.send_uniform("u_clipping_plane", clipping_plane);
 	object.send_uniform("u_model", model);
 	object.send_uniform("u_inverted_model", glm::transpose(glm::inverse(glm::mat3(model))));
 	object.send_uniform("u_mvp", camera.get_matrix() * model);
 	object.send_uniform("u_camera", camera.get_position());
-	object.send_uniform("u_ambient_color", Material::entity.get_ambient() * lights[0]->get_color());
-	object.send_uniform("u_diffuse_color", Material::entity.get_diffuse() * lights[0]->get_color());
-	object.send_uniform("u_specular_color", Material::entity.get_specular() * lights[0]->get_color());
+	object.send_uniform("u_ambient", Material::entity.get_ambient());
+	object.send_uniform("u_diffuse", Material::entity.get_diffuse());
+	object.send_uniform("u_specular", Material::entity.get_specular());
 	object.send_uniform("u_shininess", Material::entity.get_shininess());
-	object.send_uniform("u_light_direction", lights[0]->get_vector());
-	object.send_uniform("u_texture", 0);
+	object.send_uniform("u_clipping_plane", clipping_plane);
+	object.send_texture("u_texture", 0);
+
+	std::vector<int> light_types;
+	std::vector<glm::vec3> light_vectors;
+	std::vector<ColorRGB> light_colors;
+	std::vector<float> light_intensities;
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+	{
+		light_types.push_back((int)lights[i]->get_type());
+		light_vectors.push_back(lights[i]->get_vector());
+		light_colors.push_back(ColorRGB(lights[i]->get_color()));
+		light_intensities.push_back(lights[i]->get_intensity());
+	}
+
+	object.send_uniform("u_light_types", light_types);
+	object.send_uniform("u_light_vectors", light_vectors);
+	object.send_uniform("u_light_colors", light_colors);
+	object.send_uniform("u_light_intensities", light_intensities);
+	object.send_uniform("u_nb_lights", std::min((int)lights.size(), (int)nb_max_lights));
 
 	object.draw();
 
