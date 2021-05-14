@@ -305,6 +305,24 @@ void Player::check_hitbox(World& world)
 	position = pos_temp;
 }
 
+// Casse un bloc si il peut
+
+void Player::break_block()
+{
+	for (float i = 0.f; i < break_distance; i += 0.1f)
+	{
+		glm::vec3 pos = glm::vec3(0.f, 0.f, -i);
+
+		pos = skin.body.propagated_matrix * skin.neck.propagated_matrix * skin.head.propagated_matrix * pos;
+
+		if ((*chunk->world)[round(pos)].get_type() != Block::Type::Air)
+		{
+			(*chunk->world)[round(pos)].set_type(Block::Type::Air, true);
+			return;
+		}
+	}
+}
+
 // Affiche le joueur
 
 void Player::draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane) const

@@ -30,6 +30,7 @@ struct Window
 };
 
 int32_t		random_int(int32_t min, int32_t max);
+float		random_float(float min, float max);
 bool		rand_probability(float probability);
 float		get_horizontal_norm(const glm::vec3& vector);
 void		set_horizontal_norm(glm::vec3& vector, float value);

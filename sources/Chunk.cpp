@@ -5,8 +5,13 @@
 #include "Material.h"
 #include "Game.h"
 
-VertexBuffer					Chunk::water;
-VertexBuffer					Chunk::limits;
+VertexBuffer Chunk::water_top;
+VertexBuffer Chunk::water_bottom;
+VertexBuffer Chunk::limits;
+
+// Tentative de faire fonctionner les arbres en bordure de chunk :(
+
+/*
 std::vector<Chunk::LeavesToAdd>	Chunk::leaves_to_add = {};
 
 // Crée une liste de feuilles à ajouter
@@ -41,6 +46,7 @@ Chunk::LeavesToAdd& Chunk::LeavesToAdd::operator=(const LeavesToAdd& other)
 
 	return *this;
 }
+*/
 
 // Crée un chunk
 
@@ -145,9 +151,9 @@ void Chunk::generate_blocks()
 		{
 			// Fond marins
 
-			float big_seabeds = pow(noise(x, z, 500.f, 1.f) / 2.f + 0.5f, 1.5f) * 30.f;
-			float medium_seabeds = pow(noise(x, z, 200.f, 1.f) / 2.f + 0.5f, 1.3f) * 5.f;
-			float small_seabeds = pow(noise(x, z, 70.f, 1.f) / 2.f + 0.5, 1.1f) * 3.f;
+			float big_seabeds = pow(noise(x, z, 500.f, 1.f) / 2.f + 0.5f, 1.5f) * 35.f;
+			float medium_seabeds = pow(noise(x, z, 200.f, 1.f) / 2.f + 0.5f, 1.3f) * 8.f;
+			float small_seabeds = pow(noise(x, z, 70.f, 1.f) / 2.f + 0.5, 1.1f) * 4.f;
 
 			float seabeds_noise = -(big_seabeds + medium_seabeds + small_seabeds);
 
@@ -297,6 +303,7 @@ bool Chunk::add_tree(int8_t x, uint8_t y, int8_t z)
 
 	// Tronc
 
+	blocks[x][y - 1][z].set_type(Block::Type::Dirt, false);
 	blocks[x][y][z].set_type(Block::Type::Wood, false);
 	blocks[x][y + 1][z].set_type(Block::Type::Wood, false);
 	blocks[x][y + 2][z].set_type(Block::Type::Wood, false);
@@ -486,12 +493,18 @@ void Chunk::draw(const Camera& camera, const std::vector<const Light*>& lights, 
 {
 	object.bind();
 
+	ColorRGB water_color = ColorRGB(0.f, 0.f, 0.f);
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+		water_color += ColorRGB(Material::water.get_color()) * ColorRGB(lights[i]->get_color()) * lights[i]->get_intensity();
+
 	object.send_uniform("u_mvp", camera.get_matrix());
 	object.send_uniform("u_camera", camera.get_position());
 	object.send_uniform("u_water_level", water_level);
-	object.send_uniform("u_water_color", Material::water.get_color());
+	object.send_uniform("u_water_color", water_color);
 	object.send_uniform("u_ambient", Material::block.get_ambient());
 	object.send_uniform("u_diffuse", Material::block.get_diffuse());
+	object.send_uniform("u_fake_cam", (int)Game::fake_cam);
 	object.send_uniform("u_clipping_plane", clipping_plane);
 	object.send_texture("u_texture", 0);
 
@@ -525,10 +538,12 @@ void Chunk::draw_water(const Camera& camera, const std::vector<const Light*>& li
 {
 	if (as_water)
 	{
-		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(position));
-		Chunk::water.send_uniform("u_mvp", camera.get_matrix() * model);
-		Chunk::water.send_uniform("u_model", model);
+		VertexBuffer& water = Game::in_water ? water_bottom : water_top;
 
-		Chunk::water.draw();
+		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(position));
+		water.send_uniform("u_mvp", camera.get_matrix() * model);
+		water.send_uniform("u_model", model);
+
+		water.draw();
 	}
 }

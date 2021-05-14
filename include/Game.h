@@ -18,7 +18,6 @@
 #include "FrameBuffer.h"
 
 constexpr float reflection_quality = 0.5f;	// Qualité des reflets (de 0 à 1)
-constexpr float refraction_quality = 1.f;	// Qualité de la réfraction (de 0 à 1)
 
 // Classe définissant le jeu
 
@@ -34,6 +33,8 @@ public:
 	static Player					player;			// Le joueur
 	static Camera					fixed_cam;		// Caméra fixée par le joueur
 	static bool						fix_cam;		// La caméra est fixée
+	static bool						fake_cam;		// Une caméra virtuelle est utilisée
+	static bool						in_water;		// La caméra est sous l'eau
 	static bool						stop_moving;	// Arrête de bouger la caméra
 	static bool						debug;			// Affiche les élements de debug
 	static float					time;			// Temps écoulé

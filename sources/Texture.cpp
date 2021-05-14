@@ -6,6 +6,7 @@ Texture Texture::sun;
 Texture Texture::moon;
 Texture Texture::water_dudv;
 Texture Texture::water_normals;
+Texture Texture::cursor;
 
 // Crée une texture
 
@@ -122,4 +123,5 @@ void Texture::init()
 	Texture::moon.load("textures/moon.png");
 	Texture::water_dudv.load("textures/water_dudv.png", GL_MIRRORED_REPEAT, GL_LINEAR);
 	Texture::water_normals.load("textures/water_normals.png", GL_REPEAT, GL_LINEAR);
+	Texture::cursor.load("textures/cursor.png");
 }

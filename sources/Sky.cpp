@@ -1,6 +1,7 @@
 #include "Sky.h"
 #include "Luminary.h"
 #include "Chunk.h"
+#include "Game.h"
 
 glm::mat4 Sky::scale_matrix = glm::scale(glm::mat4(1.f), glm::vec3(distance * 2.f, distance * 2.f, distance * 2.f));
 
@@ -72,15 +73,26 @@ void Sky::update(const glm::vec3& player_pos, float sun_height)
 
 // Affiche le ciel
 
-void Sky::draw(const Camera& camera) const
+void Sky::draw(const Camera& camera, const std::vector<const Light*>& lights) const
 {
 	glFrontFace(GL_CW);
 	Shader::sky.bind();
 	object.bind();
 
+	object.send_uniform("u_model", model);
 	object.send_uniform("u_mvp", camera.get_matrix() * model);
 	object.send_uniform("u_high_color", high_color);
 	object.send_uniform("u_low_color", low_color);
+	object.send_uniform("u_camera", camera.get_position());
+	object.send_uniform("u_water_level", water_level);
+	object.send_uniform("u_fake_cam", (int)Game::fake_cam);
+
+	ColorRGB water_color = ColorRGB(0.f, 0.f, 0.f);
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+		water_color += ColorRGB(Material::water.get_color()) * ColorRGB(lights[i]->get_color()) * lights[i]->get_intensity();
+
+	object.send_uniform("u_water_color", water_color);
 
 	object.draw();
 

@@ -5,6 +5,7 @@ Shader Shader::entity;
 Shader Shader::sky;
 Shader Shader::luminary;
 Shader Shader::water;
+Shader Shader::in_water;
 Shader Shader::screen;
 Shader Shader::debug;
 
@@ -210,6 +211,7 @@ void Shader::init()
 	Shader::sky.load("shaders/sky.vert", "shaders/sky.frag");
 	Shader::luminary.load("shaders/luminary.vert", "shaders/luminary.frag");
 	Shader::water.load("shaders/water.vert", "shaders/water.frag");
+	Shader::in_water.load("shaders/in_water.vert", "shaders/in_water.frag");
 	Shader::screen.load("shaders/screen.vert", "shaders/screen.frag");
 	Shader::debug.load("shaders/debug.vert", "shaders/debug.frag");
 }

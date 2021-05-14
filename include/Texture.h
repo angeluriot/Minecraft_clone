@@ -19,6 +19,7 @@ public:
 	static Texture			moon;			// Texture de la lune
 	static Texture			water_dudv;		// Texture pour déformer les reflets sur l'eau
 	static Texture			water_normals;	// Texture représentant les normales de l'eau
+	static Texture			cursor;			// Curseur
 
 							Texture();
 							Texture(const Texture& other);

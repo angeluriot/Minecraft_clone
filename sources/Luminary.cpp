@@ -46,13 +46,24 @@ void Luminary::init()
 
 // Affiche l'astre
 
-void Luminary::draw(const Camera& camera) const
+void Luminary::draw(const Camera& camera, const std::vector<const Light*>& lights) const
 {
 	Shader::luminary.bind();
 	texture->bind(0);
 	object.bind();
 
+	object.send_uniform("u_model", model);
 	object.send_uniform("u_mvp", camera.get_matrix() * model);
+	object.send_uniform("u_camera", camera.get_position());
+	object.send_uniform("u_water_level", water_level);
+	object.send_uniform("u_fake_cam", (int)Game::fake_cam);
+
+	ColorRGB water_color = ColorRGB(0.f, 0.f, 0.f);
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+		water_color += ColorRGB(Material::water.get_color()) * ColorRGB(lights[i]->get_color()) * lights[i]->get_intensity();
+
+	object.send_uniform("u_water_color", water_color);
 	object.send_texture("u_texture", 0);
 	object.draw();
 	

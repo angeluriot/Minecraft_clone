@@ -8,6 +8,8 @@ std::stack<glm::mat4>	Game::matrices		= {};
 Player					Game::player;
 Camera					Game::fixed_cam;
 bool					Game::fix_cam		= false;
+bool					Game::fake_cam		= false;
+bool					Game::in_water		= false;
 bool					Game::stop_moving	= false;
 bool					Game::debug			= false;
 float					Game::time			= 0.f;
@@ -58,6 +60,9 @@ void Game::checks_events(const SDL_Event& my_event)
 		}
 	}
 
+	if (my_event.type == SDL_MOUSEBUTTONUP)
+		player.break_block();
+
 	// Quitter la fenêtre
 	if ((my_event.type == SDL_KEYUP && my_event.key.keysym.sym == SDLK_ESCAPE) || (stop_moving && my_event.type == SDL_MOUSEBUTTONUP))
 	{
@@ -88,6 +93,7 @@ void Game::update(glm::ivec2& mouse_pos)
 	}
 
 	player.update_head();
+	in_water = player.camera.get_position().y < water_level;
 
 	// Génération
 	world.send_meshes();
@@ -102,8 +108,6 @@ void Game::update(glm::ivec2& mouse_pos)
 
 void Game::draw()
 {
-	// Fait le rendu de la reflection
-
 	Light test_1(Light::Type::Point, glm::vec3(0., 40., 0.), Color(1., 1., 1., 1.), 100.f);
 	Light test_2(Light::Type::Point, glm::vec3(0., 40., 100.), Color(1., 1., 1., 1.), 100.f);
 	Light test_3(Light::Type::Point, glm::vec3(100., 40., 0.), Color(1., 1., 1., 1.), 100.f);
@@ -111,64 +115,111 @@ void Game::draw()
 	std::vector<const Light*> lights = { sun.get_light(), moon.get_light(), sky.get_light() };
 
 	Camera render_camera = fix_cam ? fixed_cam : player.camera;
-	render_camera.invert(water_level);
-	render_camera.change_resolution(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
 
-	FrameBuffer::reflection.bind();
+	if (in_water)
 	{
-		FrameBuffer::clear();
+		// Fait le rendu de la refraction
 
-		player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
-		world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
-		sun.draw(render_camera);
-		moon.draw(render_camera);
-		sky.draw(render_camera);
-	}
-	FrameBuffer::unbind();
-
-	// Fait le rendu de la refraction
-
-	render_camera = fix_cam ? fixed_cam : player.camera;
-	render_camera.change_resolution(Window::size.x * refraction_quality, Window::size.y * refraction_quality);
-
-	FrameBuffer::refraction.bind();
-	{
-		FrameBuffer::clear();
-
-		player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
-		world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
-
-		if (debug)
-			world.draw_debug(render_camera);
-	}
-	FrameBuffer::unbind();
-
-	// Fait le rendu du jeu
-
-	render_camera.change_resolution(Window::size.x, Window::size.y);
-
-	FrameBuffer::game.bind();
-	{
-		FrameBuffer::clear();
-
-		player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
-		world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
-		sun.draw(render_camera);
-		moon.draw(render_camera);
-		sky.draw(render_camera);
-
-		if (debug)
-			world.draw_debug(render_camera);
-
-		FrameBuffer::reflection.get_texture().bind(0);
-		FrameBuffer::refraction.get_texture().bind(1);
+		FrameBuffer::refraction.bind();
 		{
-			world.draw_water(render_camera, lights);
+			FrameBuffer::clear();
+			
+			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
+			sun.draw(render_camera, lights);
+			moon.draw(render_camera, lights);
+			sky.draw(render_camera, lights);
+
+			if (debug)
+				world.draw_debug(render_camera);
 		}
-		Texture::unbind();
-		Texture::unbind();
+		FrameBuffer::unbind();
+
+		// Fait le rendu du jeu
+
+		FrameBuffer::game.bind();
+		{
+			FrameBuffer::clear();
+			
+			player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+			world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+			sky.draw(render_camera, lights);
+
+			if (debug)
+				world.draw_debug(render_camera);
+
+			FrameBuffer::refraction.get_texture().bind(1);
+			{
+				world.draw_water(render_camera, lights);
+			}
+			Texture::unbind();
+		}
+		FrameBuffer::unbind();
 	}
-	FrameBuffer::unbind();
+
+	else
+	{
+		// Fait le rendu de la reflection
+
+		render_camera.invert(water_level);
+		render_camera.change_resolution(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
+		fake_cam = true;
+
+		FrameBuffer::reflection.bind();
+		{
+			FrameBuffer::clear();
+
+			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
+			sun.draw(render_camera, lights);
+			moon.draw(render_camera, lights);
+			sky.draw(render_camera, lights);
+		}
+		FrameBuffer::unbind();
+
+		// Fait le rendu de la refraction
+
+		render_camera = fix_cam ? fixed_cam : player.camera;
+		render_camera.change_resolution(Window::size.x, Window::size.y);
+		fake_cam = false;
+
+		FrameBuffer::refraction.bind();
+		{
+			FrameBuffer::clear();
+
+			player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+			world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
+
+			if (debug)
+				world.draw_debug(render_camera);
+		}
+		FrameBuffer::unbind();
+
+		// Fait le rendu du jeu
+
+		FrameBuffer::game.bind();
+		{
+			FrameBuffer::clear();
+
+			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			sun.draw(render_camera, lights);
+			moon.draw(render_camera, lights);
+			sky.draw(render_camera, lights);
+
+			if (debug)
+				world.draw_debug(render_camera);
+
+			FrameBuffer::reflection.get_texture().bind(0);
+			FrameBuffer::refraction.get_texture().bind(1);
+			{
+				world.draw_water(render_camera, lights);
+			}
+			Texture::unbind();
+			Texture::unbind();
+		}
+		FrameBuffer::unbind();
+	}
 
 	// Fait le rendu du final
 
@@ -176,12 +227,16 @@ void Game::draw()
 
 	Shader::screen.bind();
 	FrameBuffer::game.get_texture().bind(0);
+	Texture::cursor.bind(1);
 	game.bind();
 	{
+		game.send_uniform("u_draw_cursor", int(!Game::fix_cam && player.first_person));
 		game.send_texture("u_texture", 0);
+		game.send_texture("u_cursor", 1);
 		game.draw();
 	}
 	VertexBuffer::unbind();
+	Texture::unbind();
 	Texture::unbind();
 	Shader::unbind();
 }

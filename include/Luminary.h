@@ -28,6 +28,7 @@ public:
 	static constexpr float	speed		= 0.01f;	// Vitesse des astres
 	static constexpr float	size		= 30.f;		// Taille des astres
 	static constexpr float	distance	= 500.f;	// Distance des astres
+	static constexpr float	start_time	= pi / 4.f;	// Temps de départ des astres
 
 							Luminary();
 							Luminary(const Luminary& other);
@@ -36,7 +37,7 @@ public:
 
 	virtual void			init();
 	virtual void			update(const glm::vec3& player_pos) = 0;
-	void					draw(const Camera& camera) const;
+	void					draw(const Camera& camera, const std::vector<const Light*>& lights) const;
 	glm::vec3				get_position() const;
 	const Light*			get_light() const;
 };

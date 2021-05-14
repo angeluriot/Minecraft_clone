@@ -25,11 +25,14 @@ uniform vec4 u_clipping_plane;
 
 void main()
 {
+	// Clipping plane
 	gl_ClipDistance[0] = dot(u_clipping_plane, u_model * vec4(a_position, 1.));
 
 	v_normal = normalize(u_inverted_model * a_normal);
 	v_position = vec3(u_model * vec4(a_position, 1.));
 	v_texcoord = a_texcoord;
+
+	// Gestion de la lumière
 
 	v_ambient_color = vec3(0., 0., 0.);
 	v_diffuse_color = vec3(0., 0., 0.);
@@ -45,7 +48,7 @@ void main()
 			intensity = u_light_intensities[i] / max(pow(distance(v_position, u_light_vectors[i]), 2), 0.01);
 		}
 
-		// Ambient
+		// Ambiante
 		v_ambient_color += u_ambient * u_light_colors[i] * intensity;
 
 		if (u_light_types[i] != 0)

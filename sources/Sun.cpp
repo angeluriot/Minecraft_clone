@@ -10,7 +10,7 @@ void Sun::init()
 	Luminary::init();
 
 	glm::mat4 player_matrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, Chunk::height + 3.f, 0.f));
-	glm::mat4 time_matrix = glm::rotate(glm::mat4(1.f), -Game::time * speed, glm::vec3(1.f, 0.f, 0.f));
+	glm::mat4 time_matrix = glm::rotate(glm::mat4(1.f), Game::time * speed + start_time, glm::vec3(1.f, 0.f, 0.f));
 	model = player_matrix * rotation_matrix * time_matrix * translation_matrix * scale_matrix;
 
 	light.set_vector(glm::normalize(-get_position()));
@@ -21,7 +21,7 @@ void Sun::init()
 void Sun::update(const glm::vec3& player_pos)
 {
 	glm::mat4 player_matrix = glm::translate(glm::mat4(1.f), player_pos);
-	glm::mat4 time_matrix = glm::rotate(glm::mat4(1.f), Game::time * speed, glm::vec3(1.f, 0.f, 0.f));
+	glm::mat4 time_matrix = glm::rotate(glm::mat4(1.f), Game::time * speed + start_time, glm::vec3(1.f, 0.f, 0.f));
 	model = player_matrix * rotation_matrix * time_matrix * translation_matrix * scale_matrix;
 
 	light.set_vector(glm::normalize(player_pos - get_position()));

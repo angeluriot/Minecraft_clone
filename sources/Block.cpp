@@ -91,6 +91,21 @@ void Block::set_type(Type type, bool update_block)
 		if (position.y < chunk->layer_min)
 			chunk->layer_min = std::max(uint16_t(position.y - 1), uint16_t(0));
 
+		// Les plantes ne peuvent pas être en l'air
+		if (type == Type::Air && (*chunk)[position + glm::ivec3(0, 1, 0)].is_plant())
+			(*chunk)[position + glm::ivec3(0, 1, 0)].set_type(Type::Air, true);
+
+		// Les grandes plantes se cassent en un coup
+		if (type == Type::Air && (*chunk)[position + glm::ivec3(0, -1, 0)].get_type() == Type::TallWeedBottom)
+			(*chunk)[position + glm::ivec3(0, -1, 0)].set_type(Type::Air, true);
+
+		// Le sable tombe
+		if (type == Type::Air && (*chunk)[position + glm::ivec3(0, 1, 0)].get_type() == Type::Sand)
+		{
+			set_type(Type::Sand, true);
+			(*chunk)[position + glm::ivec3(0, 1, 0)].set_type(Type::Air, true);
+		}
+
 		update(true);
 	}
 }

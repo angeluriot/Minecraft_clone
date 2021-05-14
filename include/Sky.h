@@ -32,7 +32,7 @@ public:
 
 	void					init();
 	void					update(const glm::vec3& player_pos, float sun_height);
-	void					draw(const Camera& camera) const;
+	void					draw(const Camera& camera, const std::vector<const Light*>& lights) const;
 	const Light*			get_light() const;
 };
 

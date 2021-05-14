@@ -17,7 +17,6 @@ uniform vec3[10] u_light_vectors;
 uniform vec3[10] u_light_colors;
 uniform float[10] u_light_intensities;
 uniform int u_nb_lights;
-uniform sampler2D u_reflection;
 uniform sampler2D u_refraction;
 uniform sampler2D u_water_dudv;
 uniform sampler2D u_water_normals;
@@ -37,22 +36,13 @@ void main()
 	vec2 distortion_2 = texture2D(u_water_dudv, distortion_2_texcoord).rg * 2. - 1.;
 	vec2 distortion = (distortion_1 + distortion_2) * waves_height;
 
-	// Réflection et réfraction
+	// Réfraction
 
 	vec2 texcoord = (v_screen_position.xy / v_screen_position.w) / 2. + 0.5;
-	vec2 reflection_texcoord = vec2(texcoord.x, -texcoord.y) + distortion;
 	vec2 refraction_texcoord = texcoord + distortion;
-
-	reflection_texcoord.x = clamp(reflection_texcoord.x, 0.001, 0.999);
-	reflection_texcoord.y = clamp(reflection_texcoord.y, -0.999, -0.001);
 
 	refraction_texcoord.x = clamp(refraction_texcoord.x, 0.001, 0.999);
 	refraction_texcoord.y = clamp(refraction_texcoord.y, 0.001, 0.999);
-
-	// Coéfficient de Fresnel
-
-	vec3 camera_direction = normalize(u_camera - v_position);
-	float reflection_alpha = pow(dot(camera_direction, vec3(0., 1., 0.)), 0.75);
 
 	// Calcul des normales
 
@@ -66,6 +56,7 @@ void main()
 	vec3 ambient_color = vec3(0., 0., 0.);
 	vec3 diffuse_color = vec3(0., 0., 0.);
 	vec3 specular_color = vec3(0., 0., 0.);
+	vec3 camera_direction = normalize(u_camera - v_position);
 
 	for (int i = 0; i < u_nb_lights; i++)
 	{
@@ -94,8 +85,8 @@ void main()
 
 	// Assemblage final
 
-	vec3 texture = mix(texture2D(u_reflection, reflection_texcoord).rgb, texture2D(u_refraction, refraction_texcoord).rgb, reflection_alpha);
-	vec3 color = texture + specular_color;
+	float depth = max(u_water_level - u_camera.y, 3.);
 
+	vec3 color = texture2D(u_refraction, refraction_texcoord).rgb + specular_color / (depth / 3.);
 	gl_FragColor = vec4(color, u_color.a);
 }

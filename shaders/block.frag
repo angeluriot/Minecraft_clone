@@ -7,24 +7,65 @@ varying vec3 v_ambient_color;
 varying vec3 v_diffuse_color;
 
 uniform vec3 u_camera;
+uniform int u_fake_cam;
 uniform float u_water_level;
-uniform vec4 u_water_color;
+uniform vec3 u_water_color;
 uniform sampler2D u_texture;
 
 void main()
 {
+	// Transparence des feuilles
 	if (texture2D(u_texture, v_texcoord).a < 0.1)
 		discard;
 
+	// Assemblage de la lumière
 	vec3 color = (v_ambient_color + v_diffuse_color) * texture2D(u_texture, v_texcoord).rgb;
 
-	float ray_water_length = distance(u_camera, v_position) * ((u_water_level - v_position.y) / (u_camera.y - v_position.y));
-	ray_water_length *= (u_water_level - v_position.y) / 5.;
+	// Calcul de la quantité d'eau tranversée par la lumière
 
-	if (v_position.y >= u_water_level)
-		ray_water_length = -30;
+	float ray_water_length;
 
-	color = mix(color, u_water_color.rgb, clamp((ray_water_length + 30.) / 70., 0., 1.));
+	if (u_camera.y >= u_water_level)
+	{
+		if (v_position.y >= u_water_level)
+			ray_water_length = -30;
+
+		else
+			ray_water_length = distance(u_camera, v_position) * ((u_water_level - v_position.y) / (u_camera.y - v_position.y));
+	}
+
+	else
+	{
+		if (v_position.y >= u_water_level)
+			ray_water_length = distance(u_camera, v_position) * ((u_water_level - u_camera.y) / (v_position.y - u_camera.y));
+
+		else
+			ray_water_length = distance(u_camera, v_position);
+	}
+
+	// Calcul de la profondeur de l'objet dans l'eau
+
+	float depth;
+
+	if (u_camera.y >= u_water_level)
+		depth = max(u_water_level - v_position.y, 0.);
+
+	else
+		depth = max(u_water_level - u_camera.y, 0.);
+
+	vec3 water_color = u_water_color;
+
+	water_color.r /= max(depth, 4.) / 4.;
+	water_color.g /= max(depth, 4.) / 4.;
+	water_color.b /= max(depth, 10.) / 10.;
+
+	if (v_position.y < u_water_level)
+		ray_water_length *= max(u_water_level - v_position.y, 7.) / 7.;
+
+	// Assemblage final
+
+	if (u_fake_cam == 0)
+		color = mix(color, water_color, clamp((ray_water_length + 30.) / 70., 0., 1.));
 
 	gl_FragColor = vec4(color, texture2D(u_texture, v_texcoord).a);
 }

@@ -145,5 +145,5 @@ void FrameBuffer::init()
 {
 	game.create(Window::size.x, Window::size.y);
 	reflection.create(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
-	refraction.create(Window::size.x * refraction_quality, Window::size.y * refraction_quality);
+	refraction.create(Window::size.x, Window::size.y);
 }

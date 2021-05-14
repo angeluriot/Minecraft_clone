@@ -248,7 +248,8 @@ void World::init(const int64_t& seed, const glm::vec3& player_pos)
 	glm::mat4 limits_scale = glm::scale(glm::mat4(1.f), glm::vec3(Chunk::size, 10000.f, Chunk::size));
 	glm::mat4 limits_shift = glm::translate(glm::mat4(1.f), glm::vec3(Chunk::size / 2.f - 0.5f, 0.f, Chunk::size / 2.f - 0.5f));
 
-	Chunk::water.send_data(Shader::water, (water_shift * water_rotation * water_scale) * Mesh::square);
+	Chunk::water_top.send_data(Shader::water, (water_shift * water_rotation * water_scale) * Mesh::square);
+	Chunk::water_bottom.send_data(Shader::in_water, (water_shift * water_rotation * water_scale) * Mesh::square);
 	Chunk::limits.send_data(Shader::debug, (limits_shift * limits_scale) * Mesh::empty_cube, DataType::Positions);
 
 	add_chunk(block_to_chunk(player_pos));
@@ -322,22 +323,34 @@ void World::draw(const Camera& camera, const std::vector<const Light*>& lights, 
 void World::draw_water(const Camera& camera, const std::vector<const Light*>& lights) const
 {
 	glDisable(GL_CULL_FACE);
-	Shader::water.bind();
+
+	if (Game::in_water)
+		Shader::in_water.bind();
+
+	else
+		Shader::water.bind();
+
+	VertexBuffer& water = Game::in_water ? Chunk::water_bottom : Chunk::water_top;
+
 	Texture::water_dudv.bind(2);
 	Texture::water_normals.bind(3);
-	Chunk::water.bind();
+	water.bind();
 
-	Chunk::water.send_uniform("u_time", Game::time);
-	Chunk::water.send_uniform("u_camera", camera.get_position());
-	Chunk::water.send_uniform("u_color", Material::water.get_color());
-	Chunk::water.send_uniform("u_ambient", Material::water.get_ambient());
-	Chunk::water.send_uniform("u_diffuse", Material::water.get_diffuse());
-	Chunk::water.send_uniform("u_specular", Material::water.get_specular());
-	Chunk::water.send_uniform("u_shininess", Material::water.get_shininess());
-	Chunk::water.send_texture("u_reflection", 0);
-	Chunk::water.send_texture("u_refraction", 1);
-	Chunk::water.send_texture("u_water_dudv", 2);
-	Chunk::water.send_texture("u_water_normals", 3);
+	water.send_uniform("u_time", Game::time);
+	water.send_uniform("u_camera", camera.get_position());
+	water.send_uniform("u_water_level", water_level);
+	water.send_uniform("u_color", Material::water.get_color());
+	water.send_uniform("u_ambient", Material::water.get_ambient());
+	water.send_uniform("u_diffuse", Material::water.get_diffuse());
+	water.send_uniform("u_specular", Material::water.get_specular());
+	water.send_uniform("u_shininess", Material::water.get_shininess());
+
+	if (!Game::in_water)
+		water.send_texture("u_reflection", 0);
+
+	water.send_texture("u_refraction", 1);
+	water.send_texture("u_water_dudv", 2);
+	water.send_texture("u_water_normals", 3);
 
 	std::vector<int> light_types;
 	std::vector<glm::vec3> light_vectors;
@@ -352,11 +365,11 @@ void World::draw_water(const Camera& camera, const std::vector<const Light*>& li
 		light_intensities.push_back(lights[i]->get_intensity());
 	}
 
-	Chunk::water.send_uniform("u_light_types", light_types);
-	Chunk::water.send_uniform("u_light_vectors", light_vectors);
-	Chunk::water.send_uniform("u_light_colors", light_colors);
-	Chunk::water.send_uniform("u_light_intensities", light_intensities);
-	Chunk::water.send_uniform("u_nb_lights", std::min((int)lights.size(), (int)nb_max_lights));
+	water.send_uniform("u_light_types", light_types);
+	water.send_uniform("u_light_vectors", light_vectors);
+	water.send_uniform("u_light_colors", light_colors);
+	water.send_uniform("u_light_intensities", light_intensities);
+	water.send_uniform("u_nb_lights", std::min((int)lights.size(), (int)nb_max_lights));
 
 	for (auto& chunk : chunks)
 		if (chunk->is_visible(camera))

@@ -51,6 +51,11 @@ void Skin::Part::draw(const Camera& camera, const std::vector<const Light*>& lig
 
 	object.bind();
 
+	ColorRGB water_color = ColorRGB(0.f, 0.f, 0.f);
+
+	for (uint16_t i = 0; i < std::min((int)lights.size(), (int)nb_max_lights); i++)
+		water_color += ColorRGB(Material::water.get_color()) * ColorRGB(lights[i]->get_color()) * lights[i]->get_intensity();
+
 	object.send_uniform("u_model", model);
 	object.send_uniform("u_inverted_model", glm::transpose(glm::inverse(glm::mat3(model))));
 	object.send_uniform("u_mvp", camera.get_matrix() * model);
@@ -59,6 +64,9 @@ void Skin::Part::draw(const Camera& camera, const std::vector<const Light*>& lig
 	object.send_uniform("u_diffuse", Material::entity.get_diffuse());
 	object.send_uniform("u_specular", Material::entity.get_specular());
 	object.send_uniform("u_shininess", Material::entity.get_shininess());
+	object.send_uniform("u_fake_cam", (int)Game::fake_cam);
+	object.send_uniform("u_water_level", water_level);
+	object.send_uniform("u_water_color", water_color);
 	object.send_uniform("u_clipping_plane", clipping_plane);
 	object.send_texture("u_texture", 0);
 

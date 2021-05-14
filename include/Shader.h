@@ -63,6 +63,7 @@ public:
 	static Shader			sky;		// Shader du ciel
 	static Shader			luminary;	// Shader des astres
 	static Shader			water;		// Shader de l'eau
+	static Shader			in_water;	// Shader de l'eau quand la caméra est sous l'eau
 	static Shader			screen;		// Shader du post-processing
 	static Shader			debug;		// Shader de debug
 

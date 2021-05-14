@@ -83,6 +83,13 @@ int32_t random_int(int32_t min, int32_t max)
 	return (rand() % (max - min)) + min;
 }
 
+// Donne un float aléatoire entre min et max
+
+float random_float(float min, float max)
+{
+	return (rand() / static_cast<float>(RAND_MAX)) * (max - min) + min;
+}
+
 // Donne vrai avec une probabilité donnée
 
 bool rand_probability(float probability)
