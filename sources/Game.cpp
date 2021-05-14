@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "LensFlare.h"
 
 World					Game::world;
 Sun						Game::sun;
@@ -22,6 +23,7 @@ void Game::init()
 	Shader::init();
 	Texture::init();
 	FrameBuffer::init();
+	LensFlare::init();
 
 	// Player
 	matrices.push(glm::mat4(1.f));
@@ -60,9 +62,6 @@ void Game::checks_events(const SDL_Event& my_event)
 		}
 	}
 
-	if (my_event.type == SDL_MOUSEBUTTONUP)
-		player.break_block();
-
 	// Quitter la fenêtre
 	if ((my_event.type == SDL_KEYUP && my_event.key.keysym.sym == SDLK_ESCAPE) || (stop_moving && my_event.type == SDL_MOUSEBUTTONUP))
 	{
@@ -72,6 +71,10 @@ void Game::checks_events(const SDL_Event& my_event)
 		glm::ivec2 mouse_pos = Window::center;
 		SDL_Delay(100);
 	}
+
+	// Casser un bloc
+	else if (my_event.type == SDL_MOUSEBUTTONUP)
+		player.break_block();
 }
 
 // Met à jour le jeu
@@ -221,18 +224,34 @@ void Game::draw()
 		FrameBuffer::unbind();
 	}
 
+	// Lens flare
+
+	FrameBuffer::lens_flare.bind();
+	{
+		FrameBuffer::clear();
+
+		if (!in_water)
+		{
+			LensFlare::draw(render_camera, sun.get_position(), sun.get_light()->get_intensity() / 2.f, sun.get_light()->get_color());
+			LensFlare::draw(render_camera, moon.get_position(), moon.get_light()->get_intensity() / 5.f, moon.get_light()->get_color());
+		}
+	}
+	FrameBuffer::unbind();
+
 	// Fait le rendu du final
 
 	VertexBuffer game(Shader::screen, Mesh::screen, DataType::Positions | DataType::TexCoords);
 
 	Shader::screen.bind();
 	FrameBuffer::game.get_texture().bind(0);
-	Texture::cursor.bind(1);
+	FrameBuffer::lens_flare.get_texture().bind(1);
+	Texture::cursor.bind(2);
 	game.bind();
 	{
 		game.send_uniform("u_draw_cursor", int(!Game::fix_cam && player.first_person));
 		game.send_texture("u_texture", 0);
-		game.send_texture("u_cursor", 1);
+		game.send_texture("u_lens_flare", 1);
+		game.send_texture("u_cursor", 2);
 		game.draw();
 	}
 	VertexBuffer::unbind();

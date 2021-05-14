@@ -21,6 +21,7 @@ public:
 	static FrameBuffer		game;		// Frame buffer pour le post processing
 	static FrameBuffer		reflection;	// Frame buffer pour la réflection sur l'eau
 	static FrameBuffer		refraction;	// Frame buffer pour la réfraction sur l'eau
+	static FrameBuffer		lens_flare;	// Frame buffer pour les lens flares
 
 							FrameBuffer();
 							FrameBuffer(const FrameBuffer& other);

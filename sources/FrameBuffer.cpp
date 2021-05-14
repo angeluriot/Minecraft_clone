@@ -4,6 +4,7 @@
 FrameBuffer FrameBuffer::game;
 FrameBuffer FrameBuffer::reflection;
 FrameBuffer FrameBuffer::refraction;
+FrameBuffer FrameBuffer::lens_flare;
 
 // Crée un frame buffer
 
@@ -146,4 +147,5 @@ void FrameBuffer::init()
 	game.create(Window::size.x, Window::size.y);
 	reflection.create(Window::size.x * reflection_quality, Window::size.y * reflection_quality);
 	refraction.create(Window::size.x, Window::size.y);
+	lens_flare.create(Window::size.x, Window::size.y);
 }

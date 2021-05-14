@@ -7,6 +7,7 @@ Shader Shader::luminary;
 Shader Shader::water;
 Shader Shader::in_water;
 Shader Shader::screen;
+Shader Shader::lens_flare;
 Shader Shader::debug;
 
 // Je ne sais pas ce n'est pas ma fonction
@@ -213,5 +214,6 @@ void Shader::init()
 	Shader::water.load("shaders/water.vert", "shaders/water.frag");
 	Shader::in_water.load("shaders/in_water.vert", "shaders/in_water.frag");
 	Shader::screen.load("shaders/screen.vert", "shaders/screen.frag");
+	Shader::lens_flare.load("shaders/lens_flare.vert", "shaders/lens_flare.frag");
 	Shader::debug.load("shaders/debug.vert", "shaders/debug.frag");
 }
