@@ -25,15 +25,15 @@ void Game::init()
 	FrameBuffer::init();
 	LensFlare::init();
 
-	// Joueur
-	matrices.push(glm::mat4(1.f));
-	player = Player(glm::vec3(0.f, Chunk::height + 3.f, 0.f));
-
 	// World
-	world.init(std::time(NULL), player.get_position());
+	world.init(std::time(NULL));
 	sun.init();
 	moon.init();
 	sky.init();
+
+	// Joueur
+	matrices.push(glm::mat4(1.f));
+	player = Player(world.get_spawn_position());
 }
 
 // Prend en compte les évenements

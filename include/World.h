@@ -51,10 +51,11 @@ public:
 	uint8_t					nb_chunks_around(const glm::ivec3& chunk_pos) const;
 	float					get_distance(const glm::vec3& player_pos, const glm::ivec3& chunk_pos) const;
 	Block*					get_selected_block(const Player& player);
-	void					init(const int64_t& seed, const glm::vec3& player_pos);
+	void					init(const int64_t& seed);
 	void					generate(const glm::vec3& player_pos);
 	void					generate_meshes();
 	void					send_meshes();
+	glm::vec3				get_spawn_position() const;
 	void					update_mobs(const glm::vec3& player_pos);
 	void					draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane = Plane(0.f, 1.f, 0.f, 10000)) const;
 	void					draw_water(const Camera& camera, const std::vector<const Light*>& lights) const;

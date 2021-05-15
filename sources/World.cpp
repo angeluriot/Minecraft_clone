@@ -245,7 +245,7 @@ Block* World::get_selected_block(const Player& player)
 
 // Ajoute un chunk à l'emplacement du joueur
 
-void World::init(const int64_t& seed, const glm::vec3& player_pos)
+void World::init(const int64_t& seed)
 {
 	srand(seed);
 	this->seed = rand();
@@ -261,7 +261,7 @@ void World::init(const int64_t& seed, const glm::vec3& player_pos)
 	Chunk::water_bottom.send_data(Shader::in_water, (water_shift * water_rotation * water_scale) * Mesh::square);
 	Chunk::limits.send_data(Shader::debug, (limits_shift * limits_scale) * Mesh::empty_cube, DataType::Positions);
 
-	add_chunk(block_to_chunk(player_pos));
+	add_chunk(glm::ivec3(0, 0, 0));
 }
 
 // Génère les chunks autour des chunks chargés
@@ -312,6 +312,16 @@ void World::send_meshes()
 			chunk->send_mesh();
 }
 
+// Donne la position où apparait le joueur
+
+glm::vec3 World::get_spawn_position() const
+{
+	if (chunks.size() == 0)
+		return glm::vec3(Chunk::size / 2.f, Chunk::height + 1, Chunk::size / 2.f);
+
+	return glm::vec3(chunks.front()->position.x + Chunk::size / 2.f, chunks.front()->local_layer_max + 1, chunks.front()->position.z + Chunk::size / 2.f);
+}
+
 // Gère les mobs du monde
 
 void World::update_mobs(const glm::vec3& player_pos)
@@ -321,7 +331,7 @@ void World::update_mobs(const glm::vec3& player_pos)
 	if (mobs.size() < nb_max_mobs && rand_probability(0.1f) && chunks.back()->local_layer_min > water_level)
 	{
 		glm::vec3 mob_pos = glm::vec3(random_float(player_pos.x - Chunk::max_distance / 2.f, player_pos.x + Chunk::max_distance / 2.f),
-			0.f, random_float(player_pos.x - Chunk::max_distance / 2.f, player_pos.x + Chunk::max_distance / 2.f));
+			0.f, random_float(player_pos.z - Chunk::max_distance / 2.f, player_pos.z + Chunk::max_distance / 2.f));
 
 		Chunk* chunk = find_chunk(block_to_chunk(glm::ivec3(mob_pos)));
 
