@@ -323,6 +323,9 @@ void Entity::check_hitbox(const World& world)
 {
 	find_entity_chunk(world);
 
+	if (chunk == NULL)
+		return;
+
 	in_air = true;
 	is_blocked = false;
 
@@ -371,6 +374,10 @@ void Entity::check_hitbox(const World& world)
 void Entity::update(const World& world, const glm::vec3& player_pos)
 {
 	check_hitbox(world);
+
+	if (chunk == NULL)
+		return;
+
 	update_position();
 	update_rotation();
 }

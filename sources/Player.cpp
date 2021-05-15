@@ -304,6 +304,9 @@ void Player::check_hitbox(World& world)
 {
 	find_player_chunk(world);
 
+	if (chunk == NULL)
+		return;
+
 	in_air = true;
 	speed = (position - previous_pos) / frame_duration;
 	glm::vec3 pos_temp = position;

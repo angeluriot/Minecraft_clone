@@ -94,6 +94,13 @@ void Mob::behaviour()
 void Mob::update(const World& world, const glm::vec3& player_pos)
 {
 	check_hitbox(world);
+
+	if (chunk == NULL)
+	{
+		will_dispawn = true;
+		return;
+	}
+
 	behaviour();
 	update_position();
 	update_rotation();
