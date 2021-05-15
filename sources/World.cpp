@@ -3,6 +3,9 @@
 #include "Block.h"
 #include "Texture.h"
 #include "Game.h"
+#include "Chicken.h"
+#include "Fox.h"
+#include "Wolf.h"
 
 // Crée le monde
 
@@ -10,6 +13,7 @@ World::World()
 {
 	chunks.clear();
 	future_chunks_pos.clear();
+	mobs.clear();
 	seed = 0;
 }
 
@@ -26,6 +30,9 @@ World::~World()
 {
 	for (auto& chunk : chunks)
 		delete chunk;
+
+	for (auto& mob : mobs)
+		delete mob;
 }
 
 // Opérateur égal
@@ -34,6 +41,7 @@ World& World::operator=(const World& other)
 {
 	chunks = other.chunks;
 	future_chunks_pos = other.future_chunks_pos;
+	mobs = other.mobs;
 	seed = other.seed;
 
 	return *this;
@@ -151,6 +159,7 @@ void World::remove_chunk(Chunk* chunk)
 	future_chunks_pos.push_back(chunk_pos);
 	chunks.remove(chunk);
 	delete chunk;
+
 	lock.unlock();
 
 	// Met à jour les bords des chunks autour
@@ -303,6 +312,48 @@ void World::send_meshes()
 			chunk->send_mesh();
 }
 
+// Gère les mobs du monde
+
+void World::update_mobs(const glm::vec3& player_pos)
+{
+	// Ajout des mobs
+	
+	if (mobs.size() < nb_max_mobs && rand_probability(0.1f) && chunks.back()->local_layer_min > water_level)
+	{
+		glm::vec3 mob_pos = glm::vec3(random_float(player_pos.x - Chunk::max_distance / 2.f, player_pos.x + Chunk::max_distance / 2.f),
+			0.f, random_float(player_pos.x - Chunk::max_distance / 2.f, player_pos.x + Chunk::max_distance / 2.f));
+
+		Chunk* chunk = find_chunk(block_to_chunk(glm::ivec3(mob_pos)));
+
+		if (chunk != NULL && glm::distance(glm::vec2(player_pos.x, player_pos.z), glm::vec2(mob_pos.x, mob_pos.z)) < Chunk::max_distance / 2.f
+			&& chunk->local_layer_min > water_level)
+		{
+			if (rand_probability(1.f / 3.f))
+				mobs.push_back(new Chicken(glm::vec3(mob_pos.x, chunk->local_layer_max + 1, mob_pos.z)));
+
+			else if (rand_probability(1.f / 3.f))
+				mobs.push_back(new Fox(glm::vec3(mob_pos.x, chunk->local_layer_max + 1, mob_pos.z)));
+
+			else
+				mobs.push_back(new Wolf(glm::vec3(mob_pos.x, chunk->local_layer_max + 1, mob_pos.z)));
+		}
+	}
+
+	// Mise à jour des mobs
+	
+	for (auto& mob : mobs)
+		mob->update(*this, player_pos);
+
+	// Supprime les mobs trop loin
+
+	for (auto it = mobs.begin(); it != mobs.end(); it++)
+		if ((*it)->will_dispawn)
+		{
+			delete* it;
+			mobs.erase(it);
+		}
+}
+
 // Affiche les blocs
 
 void World::draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane) const
@@ -380,6 +431,14 @@ void World::draw_water(const Camera& camera, const std::vector<const Light*>& li
 	Texture::unbind();
 	Shader::unbind();
 	glEnable(GL_CULL_FACE);
+}
+
+// Affiche les mobs
+
+void World::draw_mobs(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane) const
+{
+	for (auto& mob : mobs)
+		mob->draw(camera, lights, clipping_plane);
 }
 
 // Affiche les élements de debug

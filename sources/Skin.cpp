@@ -264,15 +264,10 @@ Skin& Skin::operator=(const Skin& other)
 	body_angle = other.body_angle;
 	head_angle = other.head_angle;
 
-	arm_1.children = {};
 	shoulder_1.children = { &arm_1 };
-	arm_2.children = {};
 	shoulder_2.children = { &arm_2 };
-	leg_1.children = {};
 	hips_1.children = { &leg_1 };
-	leg_2.children = {};
 	hips_2.children = { &leg_2 };
-	camera.children = {};
 	head.children = { &camera };
 	neck.children = { &head };
 	body.children = { &shoulder_1, &shoulder_2, &hips_1, &hips_2, &neck };

@@ -13,6 +13,7 @@
 class Player;
 class World;
 class Game;
+class Entity;
 
 // Classe définissant un chunk
 
@@ -92,6 +93,7 @@ public:
 	friend						World;
 	friend						Block;
 	friend						Player;
+	friend						Entity;
 };
 
 #endif

@@ -7,6 +7,9 @@ Texture Texture::moon;
 Texture Texture::water_dudv;
 Texture Texture::water_normals;
 Texture Texture::cursor;
+Texture Texture::wolf;
+Texture Texture::fox;
+Texture Texture::chicken;
 
 // Crée une texture
 
@@ -124,4 +127,7 @@ void Texture::init()
 	Texture::water_dudv.load("textures/water_dudv.png", GL_MIRRORED_REPEAT, GL_LINEAR);
 	Texture::water_normals.load("textures/water_normals.png", GL_REPEAT, GL_LINEAR);
 	Texture::cursor.load("textures/cursor.png");
+	Texture::chicken.load("textures/chicken.png");
+	Texture::wolf.load("textures/wolf.png");
+	Texture::fox.load("textures/fox.png");
 }

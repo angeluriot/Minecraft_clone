@@ -30,13 +30,15 @@ Player::Player(const glm::vec3& position)
 	speed = glm::vec3(0.f, 0.f, 0.f);
 	in_air = true;
 
-
-	hitbox = { glm::vec3(-0.5f + epsilon, -1.f + epsilon, -0.5f + epsilon), glm::vec3(-0.5f + epsilon, -1.f + epsilon, 0.5f - epsilon),
-			   glm::vec3( 0.5f - epsilon, -1.f + epsilon, -0.5f + epsilon), glm::vec3( 0.5f - epsilon, -1.f + epsilon, 0.5f - epsilon),
-			   glm::vec3(-0.5f + epsilon,  0.f          , -0.5f + epsilon), glm::vec3(-0.5f + epsilon,  0.f          , 0.5f - epsilon),
-			   glm::vec3( 0.5f - epsilon,  0.f          , -0.5f + epsilon), glm::vec3( 0.5f - epsilon,  0.f          , 0.5f - epsilon),
-			   glm::vec3(-0.5f + epsilon,  1.f - epsilon, -0.5f + epsilon), glm::vec3(-0.5f + epsilon,  1.f - epsilon, 0.5f - epsilon),
-			   glm::vec3( 0.5f - epsilon,  1.f - epsilon, -0.5f + epsilon), glm::vec3( 0.5f - epsilon,	1.f - epsilon, 0.5f - epsilon) };
+	hitbox =
+	{
+		glm::vec3(-0.5f + epsilon, -1.f + epsilon, -0.5f + epsilon), glm::vec3(-0.5f + epsilon, -1.f + epsilon, 0.5f - epsilon),
+		glm::vec3( 0.5f - epsilon, -1.f + epsilon, -0.5f + epsilon), glm::vec3( 0.5f - epsilon, -1.f + epsilon, 0.5f - epsilon),
+		glm::vec3(-0.5f + epsilon,  0.f          , -0.5f + epsilon), glm::vec3(-0.5f + epsilon,  0.f          , 0.5f - epsilon),
+		glm::vec3( 0.5f - epsilon,  0.f          , -0.5f + epsilon), glm::vec3( 0.5f - epsilon,  0.f          , 0.5f - epsilon),
+		glm::vec3(-0.5f + epsilon,  1.f - epsilon, -0.5f + epsilon), glm::vec3(-0.5f + epsilon,  1.f - epsilon, 0.5f - epsilon),
+		glm::vec3( 0.5f - epsilon,  1.f - epsilon, -0.5f + epsilon), glm::vec3( 0.5f - epsilon,	 1.f - epsilon, 0.5f - epsilon) 
+	};
 
 	chunk = NULL;
 	fly = false;
@@ -156,7 +158,30 @@ void Player::move(const Uint8* keystates, World& world)
 	{
 		skin.running = keystates[SDL_SCANCODE_LSHIFT];
 
-		if (in_air)
+		if (position.y <= water_level + 1.f && in_air)
+		{
+			if (keystates[SDL_SCANCODE_A])
+				speed -= glm::normalize(glm::cross(camera.get_direction(), glm::vec3(0.f, 1.f, 0.f))) * walk_speed * frame_duration;
+
+			if (keystates[SDL_SCANCODE_D])
+				speed += glm::normalize(glm::cross(camera.get_direction(), glm::vec3(0.f, 1.f, 0.f))) * walk_speed * frame_duration;
+
+			if (keystates[SDL_SCANCODE_W])
+				speed += glm::normalize(glm::vec3(camera.get_direction().x, 0.f, camera.get_direction().z)) * walk_speed * frame_duration;
+
+			if (keystates[SDL_SCANCODE_S])
+				speed -= glm::normalize(glm::vec3(camera.get_direction().x, 0.f, camera.get_direction().z)) * walk_speed * frame_duration;
+
+			if (keystates[SDL_SCANCODE_SPACE])
+				speed += glm::vec3(0.f, 1.f, 0.f) * run_speed * frame_duration;
+
+			if (keystates[SDL_SCANCODE_LCTRL])
+				speed -= glm::vec3(0.f, 1.f, 0.f) * run_speed * frame_duration;
+
+			in_air = true;
+		}
+
+		else if (in_air)
 		{
 			if (keystates[SDL_SCANCODE_A])
 				speed -= glm::normalize(glm::cross(camera.get_direction(), glm::vec3(0.f, 1.f, 0.f))) * move_speed * 2.f * frame_duration;
@@ -212,7 +237,9 @@ void Player::move(const Uint8* keystates, World& world)
 
 void Player::jump()
 {
-	speed.y = jump_speed;
+	if (position.y > water_level - 0.5f)
+		speed.y = jump_speed;
+
 	in_air = true;
 }
 
@@ -226,7 +253,18 @@ void Player::update_position()
 		return;
 	}
 
-	speed.y -= gravity * frame_duration;
+	if (position.y > water_level + 1.f)
+		speed.y -= gravity * frame_duration;
+
+	else if (position.y > water_level)
+		speed.y -= 0.5f * gravity * frame_duration;
+
+	else
+	{
+		speed.y -= 0.02f * gravity * frame_duration;
+		speed *= 0.99f;
+	}
+
 	position += speed * frame_duration;
 }
 
@@ -328,11 +366,4 @@ void Player::break_block()
 void Player::draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane) const
 {
 	skin.draw(camera, lights, clipping_plane);
-}
-
-// Passe d'un vecteur de float à un vecteur d'int
-
-glm::ivec3 Player::round(const glm::vec3& vector)
-{
-	return glm::ivec3(std::round(vector.x), std::round(vector.y), std::round(vector.z));
 }

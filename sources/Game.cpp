@@ -25,7 +25,7 @@ void Game::init()
 	FrameBuffer::init();
 	LensFlare::init();
 
-	// Player
+	// Joueur
 	matrices.push(glm::mat4(1.f));
 	player = Player(glm::vec3(0.f, Chunk::height + 3.f, 0.f));
 
@@ -101,6 +101,9 @@ void Game::update(glm::ivec2& mouse_pos)
 	// Génération
 	world.send_meshes();
 
+	// Update des mobs
+	world.update_mobs(player.get_position());
+
 	// Météo
 	sun.update(player.get_position());
 	moon.update(player.get_position());
@@ -128,6 +131,7 @@ void Game::draw()
 			FrameBuffer::clear();
 			
 			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw_mobs(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
 			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
 			sun.draw(render_camera, lights);
 			moon.draw(render_camera, lights);
@@ -145,6 +149,7 @@ void Game::draw()
 			FrameBuffer::clear();
 			
 			player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+			world.draw_mobs(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
 			world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
 			sky.draw(render_camera, lights);
 
@@ -173,6 +178,7 @@ void Game::draw()
 			FrameBuffer::clear();
 
 			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw_mobs(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
 			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level + 0.4f));
 			sun.draw(render_camera, lights);
 			moon.draw(render_camera, lights);
@@ -191,6 +197,7 @@ void Game::draw()
 			FrameBuffer::clear();
 
 			player.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
+			world.draw_mobs(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level));
 			world.draw(render_camera, lights, Plane(0.f, -1.f, 0.f, water_level + 0.6f));
 
 			if (debug)
@@ -205,6 +212,7 @@ void Game::draw()
 			FrameBuffer::clear();
 
 			player.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
+			world.draw_mobs(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
 			world.draw(render_camera, lights, Plane(0.f, 1.f, 0.f, -water_level));
 			sun.draw(render_camera, lights);
 			moon.draw(render_camera, lights);

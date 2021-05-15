@@ -267,7 +267,6 @@ void Chunk::generate_blocks()
 
 	layer_min = local_layer_min;
 	layer_max = local_layer_max;
-
 }
 
 // Ajoute un arbre à l'emplacement donné

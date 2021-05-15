@@ -76,6 +76,13 @@ void Window::clear()
 		SDL_DestroyWindow(Window::window);
 }
 
+// Passe d'un vecteur de float à un vecteur d'int
+
+glm::ivec3 round(const glm::vec3& vector)
+{
+	return glm::ivec3(std::round(vector.x), std::round(vector.y), std::round(vector.z));
+}
+
 // Donne un int aléatoire entre min et max
 
 int32_t random_int(int32_t min, int32_t max)

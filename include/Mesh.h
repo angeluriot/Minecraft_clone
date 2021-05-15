@@ -5,6 +5,7 @@
 
 class Skin;
 class Block;
+class Entity;
 
 // Classe définissant une maillage
 
@@ -58,6 +59,7 @@ public:
 
 	friend				Block;
 	friend				Skin;
+	friend				Entity;
 	friend Mesh			operator*(const glm::mat4& matrix, const Mesh& mesh);
 };
 

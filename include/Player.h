@@ -12,7 +12,7 @@
 
 // Classe définissant un joueur
 
-class Player
+class Player // : Entity :(
 {
 public:
 
@@ -54,8 +54,6 @@ public:
 	void						check_hitbox(World& world);
 	void						break_block();
 	void						draw(const Camera& camera, const std::vector<const Light*>& lights, const Plane& clipping_plane = Plane(0.f, 1.f, 0.f, 10000.f)) const;
-
-	static glm::ivec3			round(const glm::vec3& vector);
 };
 
 #endif
