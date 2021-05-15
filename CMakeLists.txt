@@ -199,7 +199,8 @@ endif()
 #Scripts to copy to bin/
 file(GLOB SHADERRESOURCES
     shaders/*
-    textures/*)
+    textures/*
+	textures/lens_flare/*)
 foreach(sourcefile ${SHADERRESOURCES})
     get_filename_component(dirname  "${sourcefile}" DIRECTORY)
     get_filename_component(filename "${sourcefile}" NAME)
