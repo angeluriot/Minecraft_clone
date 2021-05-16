@@ -2,7 +2,7 @@
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
-![size](https://img.shields.io/badge/Size-52%20Mo-f12222)
+![size](https://img.shields.io/badge/Size-53%20Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 <br/>
 
@@ -20,10 +20,25 @@ Ce dépôt contient le code source d'un clone simplifié de Minecraft.
 
 Voici une vidéo présentant le programme :
 
-[<p align="center"><img src="" width="200"></p>](https://www.youtube.com/)
+[<p><img src="https://i.imgur.com/StJSmmr.png" width="400"></p>](https://www.youtube.com/watch?v=muUEtjMYQMY)
 
 <br/>
 
+# Tests
+
+<p align="center">
+	<img src="https://i.imgur.com/cyE45Ji.png" width="700">
+</p>
+
+<p align="center">
+	<img src="https://i.imgur.com/ybzrkhe.png" width="700">
+</p>
+
+<p align="center">
+	<img src="https://i.imgur.com/nlKex2g.png" width="700">
+</p>
+
+<br/>
 
 # Remarques
 
