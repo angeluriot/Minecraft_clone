@@ -121,7 +121,7 @@ void Texture::unbind()
 void Texture::init()
 {
 	Texture::blocks.load("textures/textures.png");
-	Texture::player.load("textures/duck.png");
+	Texture::player.load("textures/steve.png");
 	Texture::sun.load("textures/sun.png");
 	Texture::moon.load("textures/moon.png");
 	Texture::water_dudv.load("textures/water_dudv.png", GL_MIRRORED_REPEAT, GL_LINEAR);

@@ -114,12 +114,7 @@ void Game::update(glm::ivec2& mouse_pos)
 
 void Game::draw()
 {
-	Light test_1(Light::Type::Point, glm::vec3(0., 40., 0.), Color(1., 1., 1., 1.), 100.f);
-	Light test_2(Light::Type::Point, glm::vec3(0., 40., 100.), Color(1., 1., 1., 1.), 100.f);
-	Light test_3(Light::Type::Point, glm::vec3(100., 40., 0.), Color(1., 1., 1., 1.), 100.f);
-
 	std::vector<const Light*> lights = { sun.get_light(), moon.get_light(), sky.get_light() };
-
 	Camera render_camera = fix_cam ? fixed_cam : player.camera;
 
 	if (in_water)
