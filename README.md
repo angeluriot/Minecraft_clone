@@ -1,6 +1,6 @@
 # Minecraft clone
 
-![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
+![Release](https://img.shields.io/badge/Release-v2.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
 ![size](https://img.shields.io/badge/Size-53%20Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
