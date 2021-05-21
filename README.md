@@ -31,11 +31,15 @@ Voici une vidéo présentant le programme :
 </p>
 
 <p align="center">
-	<img src="https://i.imgur.com/ybzrkhe.png" width="700">
+	<img src="https://i.imgur.com/7aaPlvT.png" width="700">
 </p>
 
 <p align="center">
-	<img src="https://i.imgur.com/nlKex2g.png" width="700">
+	<img src="https://i.imgur.com/PBEU62t.png" width="700">
+</p>
+
+<p align="center">
+	<img src="https://i.imgur.com/4p2mObU.png" width="700">
 </p>
 
 <br/>
