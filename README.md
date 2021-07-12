@@ -51,7 +51,11 @@ Here is a video presenting the program :
 
 # Notes
 
-This program is a school project for Polytech Paris-Saclay as part of our computer graphics course.
+This program is a school project for Polytech Paris-Saclay as part of our computer graphics course and we won a prize for the best project :
+
+<p align="center">
+	<img src="https://i.imgur.com/pyCPLJq.png" width="700">
+</p>
 
 <br/>
 
