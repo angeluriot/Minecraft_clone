@@ -2,11 +2,15 @@
 
 ![Release](https://img.shields.io/badge/Release-v2.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
-![size](https://img.shields.io/badge/Size-53%20Mo-f12222)
+![Libraries](https://img.shields.io/badge/Libraries-OpenGL_SDL_GLM-20d645)
+![Size](https://img.shields.io/badge/Size-53%20Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 <br/>
 
-Ce dépôt contient le code source d'un clone simplifié de Minecraft.
+This program uses the concept of the famous game
+Minecraft. It procedurally generates an infinite world,
+the player has an animated character and can break
+blocks, there are also different biomes and mobs.
 
 <br/>
 
@@ -16,9 +20,9 @@ Ce dépôt contient le code source d'un clone simplifié de Minecraft.
 
 <br/>
 
-# Vidéo
+# Video
 
-Voici une vidéo présentant le programme :
+Here is a video presenting the program :
 
 [<p><img src="https://i.imgur.com/StJSmmr.png" width="400"></p>](https://www.youtube.com/watch?v=muUEtjMYQMY)
 
@@ -44,12 +48,12 @@ Voici une vidéo présentant le programme :
 
 <br/>
 
-# Remarques
+# Notes
 
-Ce programme est un projet scolaire pour Polytech Paris-Saclay dans le cadre d'un cours d'informatique graphique.
+This program is a school project for Polytech Paris-Saclay as part of our computer graphics course.
 
-# Crédits
+# Credits
 
-* [**Angel Uriot**](https://github.com/angeluriot) : Co-créateur du projet.
-* [**Gaétan Renard**]() : Co-créateur du projet.
-* [**Arthur Azambre**]() : Co-créateur du projet.
+* [**Angel Uriot**](https://github.com/angeluriot) : Co-creator of the project.
+* [**Gaétan Renard**]() : Co-creator of the project.
+* [**Arthur Azambre**](https://github.com/arthurazambre) : Co-creator of the project.
