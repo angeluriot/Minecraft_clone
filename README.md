@@ -7,10 +7,10 @@
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 <br/>
 
-This program uses the concept of the famous game
-Minecraft. It procedurally generates an infinite world,
-the player has an animated character and can break
-blocks, there are also different biomes and mobs.
+This program uses the concept of the famous game Minecraft but
+with better graphics. It procedurally generates an infinite world,
+the player has an animated character and can break blocks,
+there are also different biomes and mobs.
 
 <br/>
 
