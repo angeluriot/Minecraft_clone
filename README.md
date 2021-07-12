@@ -5,6 +5,7 @@
 ![Libraries](https://img.shields.io/badge/Libraries-OpenGL_SDL_GLM-20d645)
 ![Size](https://img.shields.io/badge/Size-53%20Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
+
 <br/>
 
 This program uses the concept of the famous game Minecraft but
@@ -51,6 +52,8 @@ Here is a video presenting the program :
 # Notes
 
 This program is a school project for Polytech Paris-Saclay as part of our computer graphics course.
+
+<br/>
 
 # Credits
 
