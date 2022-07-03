@@ -8,6 +8,8 @@
 
 <br/>
 
+⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️
+
 This program uses the concept of the famous game Minecraft but
 with better graphics. It procedurally generates an infinite world,
 the player has an animated character and can break blocks,
