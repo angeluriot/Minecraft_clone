@@ -1,4 +1,4 @@
-# Minecraft clone
+# ⛏️ Minecraft clone
 
 ![Release](https://img.shields.io/badge/Release-v2.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
@@ -8,12 +8,11 @@
 
 <br/>
 
-⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️
+*⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️*
 
-This program uses the concept of the famous game Minecraft but
-with better graphics. It procedurally generates an infinite world,
-the player has an animated character and can break blocks,
-there are also different biomes and mobs.
+<br/>
+
+This program uses the concept of the famous game Minecraft but with better graphics. It procedurally generates an infinite world, the player has an animated character and can break blocks, there are also different biomes and mobs.
 
 <br/>
 
@@ -23,15 +22,27 @@ there are also different biomes and mobs.
 
 <br/>
 
-# Video
+# 📋 Summary
 
-Here is a video presenting the program :
-
-[<p><img src="https://i.imgur.com/StJSmmr.png" width="400"></p>](https://www.youtube.com/watch?v=muUEtjMYQMY)
+* **[📋 Summary](#-summary)**
+* **[🎥 Video](#-video)**
+* **[🧪 Tests](#-tests)**
+* **[📝 Notes](#-notes)**
+* **[🙏 Credits](#-credits)**
 
 <br/>
 
-# Tests
+<br/>
+
+# 🎥 Video
+
+Here is a video presenting the program :
+
+[<p align="center"><img src="https://i.imgur.com/StJSmmr.png" width="500"></p>](https://www.youtube.com/watch?v=muUEtjMYQMY)
+
+<br/>
+
+# 🧪 Tests
 
 <p align="center">
 	<img src="https://i.imgur.com/cyE45Ji.png" width="700">
@@ -51,7 +62,7 @@ Here is a video presenting the program :
 
 <br/>
 
-# Notes
+# 📝 Notes
 
 This program is a school project for Polytech Paris-Saclay as part of our computer graphics course and we won a prize for the best project :
 
@@ -61,7 +72,7 @@ This program is a school project for Polytech Paris-Saclay as part of our comput
 
 <br/>
 
-# Credits
+# 🙏 Credits
 
 * [**Angel Uriot**](https://github.com/angeluriot) : Co-creator of the project.
 * [**Gaétan Renard**]() : Co-creator of the project.
